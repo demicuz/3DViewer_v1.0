@@ -1,0 +1,9 @@
+3DViewer
+
+.cache/
+.clang-tidy
+*.o
+*.d
+
+compile_commands.json
+*.sublime-*
