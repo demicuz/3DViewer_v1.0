@@ -8,21 +8,6 @@
 #include <gl-wrapper.h>
 #include <vector.h>
 
-const char *vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"uniform mat4 MVP;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = MVP * vec4(aPos, 1.0);\n"
-"}\0"; // TODO aren't they null-terminated by default?
-
-const char *fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\0"; // TODO aren't they null-terminated by default?
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -69,14 +54,8 @@ int main(void) {
     glViewport(0, 0, WIDTH, HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    GLuint vertexShader;
-    compile_shader_source(vertexShaderSource, GL_VERTEX_SHADER, &vertexShader);
-
-    GLuint fragmentShader;
-    compile_shader_source(fragmentShaderSource, GL_FRAGMENT_SHADER, &fragmentShader);
-
     GLuint shaderProgram;
-    link_program(vertexShader, fragmentShader, &shaderProgram);
+    create_line_shader_program(&shaderProgram);
 
     GLfloat cube_vertices[] = {
         // front face
