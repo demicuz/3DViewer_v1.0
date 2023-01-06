@@ -77,7 +77,7 @@ t_mat4 *put_into_unit_box(t_bbox *bbox, t_mat4 *dest) {
 }
 
 bool init_obj(t_object *obj) {
-  obj->model = mat4_create_identity();
+  mat4_set_identity(&obj->model);
 
   obj->bbox = (t_bbox){.x_min = -1,
                        .x_max = 1,
@@ -87,7 +87,7 @@ bool init_obj(t_object *obj) {
                        .z_max = 1};
   put_into_unit_box(&obj->bbox, &obj->model);
 
-  obj->view = mat4_create_identity();
+  mat4_set_identity(&obj->view);
 
   t_vec3 translation = vec3(0, 0, -2);
   mat4_translate(&obj->view, &translation, NULL);
@@ -98,7 +98,7 @@ bool init_obj(t_object *obj) {
   // t_vec3 scale = vec3(0.5f, 0.5f, 0.5f);
   // mat4_scale(&obj->view, &scale, NULL);
 
-  obj->proj = mat4_create_identity();
+  mat4_set_identity(&obj->proj);
   mat4_perspective(40.0f, ASPECT, 0.1f, 1e5f, &obj->proj);
 
   return true;
