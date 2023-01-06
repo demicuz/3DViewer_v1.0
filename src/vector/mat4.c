@@ -175,51 +175,50 @@ t_mat4 *mat4_rotate(t_mat4 *mat, float angle, t_vec3 *axis, t_mat4 *dest) {
 }
 
 t_mat4 *mat4_translate(t_mat4 *mat, t_vec3 *vec, t_mat4 *dest) {
-  float x = vec->raw[0], y = vec->raw[1], z = vec->raw[2], a00, a01, a02, a03,
-        a10, a11, a12, a13, a20, a21, a22, a23;
+  float *m = mat->raw;
+  float *v = vec->raw;
+  float *d = dest->raw;
+  float x = v[0], y = v[1], z = v[2], a00, a01, a02, a03, a10, a11, a12, a13,
+        a20, a21, a22, a23;
 
   if (!dest || mat == dest) {
-    mat->raw[12] =
-        mat->raw[0] * x + mat->raw[4] * y + mat->raw[8] * z + mat->raw[12];
-    mat->raw[13] =
-        mat->raw[1] * x + mat->raw[5] * y + mat->raw[9] * z + mat->raw[13];
-    mat->raw[14] =
-        mat->raw[2] * x + mat->raw[6] * y + mat->raw[10] * z + mat->raw[14];
-    mat->raw[15] =
-        mat->raw[3] * x + mat->raw[7] * y + mat->raw[11] * z + mat->raw[15];
+    m[12] = m[0] * x + m[4] * y + m[8] * z + m[12];
+    m[13] = m[1] * x + m[5] * y + m[9] * z + m[13];
+    m[14] = m[2] * x + m[6] * y + m[10] * z + m[14];
+    m[15] = m[3] * x + m[7] * y + m[11] * z + m[15];
     return mat;
   }
 
-  a00 = mat->raw[0];
-  a01 = mat->raw[1];
-  a02 = mat->raw[2];
-  a03 = mat->raw[3];
-  a10 = mat->raw[4];
-  a11 = mat->raw[5];
-  a12 = mat->raw[6];
-  a13 = mat->raw[7];
-  a20 = mat->raw[8];
-  a21 = mat->raw[9];
-  a22 = mat->raw[10];
-  a23 = mat->raw[11];
+  a00 = m[0];
+  a01 = m[1];
+  a02 = m[2];
+  a03 = m[3];
+  a10 = m[4];
+  a11 = m[5];
+  a12 = m[6];
+  a13 = m[7];
+  a20 = m[8];
+  a21 = m[9];
+  a22 = m[10];
+  a23 = m[11];
 
-  dest->raw[0] = a00;
-  dest->raw[1] = a01;
-  dest->raw[2] = a02;
-  dest->raw[3] = a03;
-  dest->raw[4] = a10;
-  dest->raw[5] = a11;
-  dest->raw[6] = a12;
-  dest->raw[7] = a13;
-  dest->raw[8] = a20;
-  dest->raw[9] = a21;
-  dest->raw[10] = a22;
-  dest->raw[11] = a23;
+  d[0] = a00;
+  d[1] = a01;
+  d[2] = a02;
+  d[3] = a03;
+  d[4] = a10;
+  d[5] = a11;
+  d[6] = a12;
+  d[7] = a13;
+  d[8] = a20;
+  d[9] = a21;
+  d[10] = a22;
+  d[11] = a23;
 
-  dest->raw[12] = a00 * x + a10 * y + a20 * z + mat->raw[12];
-  dest->raw[13] = a01 * x + a11 * y + a21 * z + mat->raw[13];
-  dest->raw[14] = a02 * x + a12 * y + a22 * z + mat->raw[14];
-  dest->raw[15] = a03 * x + a13 * y + a23 * z + mat->raw[15];
+  d[12] = a00 * x + a10 * y + a20 * z + mat->raw[12];
+  d[13] = a01 * x + a11 * y + a21 * z + mat->raw[13];
+  d[14] = a02 * x + a12 * y + a22 * z + mat->raw[14];
+  d[15] = a03 * x + a13 * y + a23 * z + mat->raw[15];
   return dest;
 }
 
