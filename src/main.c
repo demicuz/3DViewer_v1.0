@@ -79,7 +79,12 @@ t_mat4 *put_into_unit_box(t_bbox *bbox, t_mat4 *dest) {
 bool init_obj(t_object *obj) {
   obj->model = mat4_create_identity();
 
-  obj->bbox = (t_bbox) {.x_min = -1, .x_max = 1, .y_min = -1, .y_max = 1, .z_min = -1, .z_max = 1};
+  obj->bbox = (t_bbox){.x_min = -1,
+                       .x_max = 1,
+                       .y_min = -1,
+                       .y_max = 1,
+                       .z_min = -1,
+                       .z_max = 1};
   put_into_unit_box(&obj->bbox, &obj->model);
 
   obj->view = mat4_create_identity();
