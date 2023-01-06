@@ -20,8 +20,11 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-int main(void) {
-  glfwInit();
+GLFWwindow *get_glfw_window(void) {
+  if (glfwInit() == GLFW_FALSE) {
+    (void)fprintf(stderr, "Failed to initialize GLFW\n");
+    exit(1);
+  }
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -46,16 +49,23 @@ int main(void) {
     glfwTerminate(); // TODO maybe not needed if completely shutting down
     exit(1);
   }
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   // Successfully loaded OpenGL
   printf("Loaded OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version),
          GLAD_VERSION_MINOR(version));
 
-  glViewport(0, 0, WIDTH, HEIGHT);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  return window;
+}
+
+int main(void) {
+  GLFWwindow *window = get_glfw_window();
 
   GLuint shaderProgram;
-  create_line_shader_program(&shaderProgram);
+  if (!create_line_shader_program(&shaderProgram)) {
+    glfwTerminate();
+    exit(1);
+  }
 
   // clang-format off
   GLfloat cube_vertices[] = {

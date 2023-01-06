@@ -10,11 +10,6 @@ typedef union {
   };
 } t_vec3;
 
-typedef struct {
-  t_vec3 orig;
-  t_vec3 dir;
-} t_ray3;
-
 typedef union {
   float raw[16];
   struct {
