@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include <3DViewer.h>
 #include <gl-wrapper.h>
@@ -59,6 +60,22 @@ GLFWwindow *get_glfw_window(void) {
   return window;
 }
 
+t_mat4 *put_into_unit_box(t_bbox *bbox, t_mat4 *dest) {
+  t_vec3 translation =
+      vec3((bbox->x_min + bbox->x_max) / 2, (bbox->y_min + bbox->y_max) / 2,
+           (bbox->z_min + bbox->z_max) / 2);
+  mat4_translate(dest, &translation, NULL);
+
+  float x_span = bbox->x_max - bbox->x_min;
+  float y_span = bbox->y_max - bbox->y_min;
+  float z_span = bbox->z_max - bbox->z_min;
+  float max_span = fmaxf(fmaxf(x_span, y_span), z_span);
+  t_vec3 scale = vec3(1.0f / max_span, 1.0f / max_span, 1.0f / max_span);
+  mat4_scale(dest, &scale, NULL);
+
+  return dest;
+}
+
 int main(void) {
   GLFWwindow *window = get_glfw_window();
 
@@ -71,19 +88,20 @@ int main(void) {
   // clang-format off
   GLfloat cube_vertices[] = {
     // front face
-     0.3f,  0.3f, -0.3f, // 0 top right
-     0.3f, -0.3f, -0.3f, // 1 bottom right
-    -0.3f, -0.3f, -0.3f, // 2 bottom left
-    -0.3f,  0.3f, -0.3f, // 3 top left
+     1,  1, -1, // 0 top right
+     1, -1, -1, // 1 bottom right
+    -1, -1, -1, // 2 bottom left
+    -1,  1, -1, // 3 top left
     // back face
-     0.3f,  0.3f,  0.3f, // 4 top right
-     0.3f, -0.3f,  0.3f, // 5 bottom right
-    -0.3f, -0.3f,  0.3f, // 6 bottom left
-    -0.3f,  0.3f,  0.3f  // 7 top left
+     1,  1,  1, // 4 top right
+     1, -1,  1, // 5 bottom right
+    -1, -1,  1, // 6 bottom left
+    -1,  1,  1  // 7 top left
   };
   // clang-format on
 
-  // TODO a datastructure for non-repetitive lines
+  // TODO a data structure for non-repetitive lines? Now we're drawing each line
+  // at least two times. There could be more, depending on the model.
   GLuint indices[] = {
       0, 1, 1, 2, 2, 3, 3, 0, // front face
       4, 5, 5, 6, 6, 7, 7, 4, // back face
@@ -120,20 +138,28 @@ int main(void) {
 
   t_mat4 model = mat4_create_identity();
 
-  t_vec3 translation = vec3(0, 0, -1);
-  mat4_translate(&model, &translation, NULL);
+  t_bbox bbox = {.x_min = -1, .x_max = 1, .y_min = -1, .y_max = 1, .z_min = -1, .z_max = 1};
+  put_into_unit_box(&bbox, &model);
+
+  t_mat4 view = mat4_create_identity();
+
+  t_vec3 translation = vec3(0, 0, -2);
+  mat4_translate(&view, &translation, NULL);
 
   t_vec3 y_axis = vec3(0, 1, 0);
-  mat4_rotate(&model, 0.2f, &y_axis, NULL);
+  mat4_rotate(&view, 0.2f, &y_axis, NULL);
 
-  t_vec3 scale = vec3(0.5f, 0.5f, 0.5f);
-  mat4_scale(&model, &scale, NULL);
+  // t_vec3 scale = vec3(0.5f, 0.5f, 0.5f);
+  // mat4_scale(&view, &scale, NULL);
 
   t_mat4 proj = mat4_create_identity();
   mat4_perspective(40.0f, ASPECT, 0.1f, 1e5f, &proj);
 
   t_mat4 mvp;
-  mat4_multiply(&proj, &model, &mvp);
+  // mat4_multiply(&proj, &model, &mvp);
+
+  mat4_multiply(&proj, &view, &mvp);
+  mat4_multiply(&mvp, &model, &mvp);
 
   GLint matrixID = glGetUniformLocation(shaderProgram, "MVP");
   glUniformMatrix4fv(matrixID, 1, GL_FALSE, mvp.raw);
@@ -155,7 +181,7 @@ int main(void) {
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    mat4_rotate(&mvp, 0.02f, &y_axis, NULL);
+    // mat4_rotate(&mvp, 0.02f, &y_axis, NULL);
     glUniformMatrix4fv(matrixID, 1, GL_FALSE, mvp.raw);
 
     glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,

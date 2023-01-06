@@ -8,4 +8,13 @@
 #define HEIGHT 600
 #define ASPECT (float)WIDTH / (float)HEIGHT
 
+typedef struct {
+  float x_min;
+  float x_max;
+  float y_min;
+  float y_max;
+  float z_min;
+  float z_max;
+} t_bbox;
+
 #endif
