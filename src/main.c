@@ -76,6 +76,29 @@ t_mat4 *put_into_unit_box(t_bbox *bbox, t_mat4 *dest) {
   return dest;
 }
 
+bool init_obj(t_object *obj) {
+  obj->model = mat4_create_identity();
+
+  obj->bbox = (t_bbox) {.x_min = -1, .x_max = 1, .y_min = -1, .y_max = 1, .z_min = -1, .z_max = 1};
+  put_into_unit_box(&obj->bbox, &obj->model);
+
+  obj->view = mat4_create_identity();
+
+  t_vec3 translation = vec3(0, 0, -2);
+  mat4_translate(&obj->view, &translation, NULL);
+
+  t_vec3 y_axis = vec3(0, 1, 0);
+  mat4_rotate(&obj->view, 0.2f, &y_axis, NULL);
+
+  // t_vec3 scale = vec3(0.5f, 0.5f, 0.5f);
+  // mat4_scale(&obj->view, &scale, NULL);
+
+  obj->proj = mat4_create_identity();
+  mat4_perspective(40.0f, ASPECT, 0.1f, 1e5f, &obj->proj);
+
+  return true;
+}
+
 int main(void) {
   GLFWwindow *window = get_glfw_window();
 
@@ -136,36 +159,15 @@ int main(void) {
 
   glUseProgram(shaderProgram);
 
-  t_mat4 model = mat4_create_identity();
-
-  t_bbox bbox = {.x_min = -1, .x_max = 1, .y_min = -1, .y_max = 1, .z_min = -1, .z_max = 1};
-  put_into_unit_box(&bbox, &model);
-
-  t_mat4 view = mat4_create_identity();
-
-  t_vec3 translation = vec3(0, 0, -2);
-  mat4_translate(&view, &translation, NULL);
-
-  t_vec3 y_axis = vec3(0, 1, 0);
-  mat4_rotate(&view, 0.2f, &y_axis, NULL);
-
-  // t_vec3 scale = vec3(0.5f, 0.5f, 0.5f);
-  // mat4_scale(&view, &scale, NULL);
-
-  t_mat4 proj = mat4_create_identity();
-  mat4_perspective(40.0f, ASPECT, 0.1f, 1e5f, &proj);
+  t_object obj;
+  init_obj(&obj);
 
   t_mat4 mvp;
-  // mat4_multiply(&proj, &model, &mvp);
+  mat4_multiply(&obj.proj, &obj.view, &mvp);
+  mat4_multiply(&mvp, &obj.model, &mvp);
 
-  mat4_multiply(&proj, &view, &mvp);
-  mat4_multiply(&mvp, &model, &mvp);
-
-  GLint matrixID = glGetUniformLocation(shaderProgram, "MVP");
-  glUniformMatrix4fv(matrixID, 1, GL_FALSE, mvp.raw);
-
-  // TODO should I also do this in the render loop?
-  // glBindVertexArray(VAO);
+  obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
+  glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, mvp.raw);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(3.0f);
@@ -182,7 +184,7 @@ int main(void) {
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // mat4_rotate(&mvp, 0.02f, &y_axis, NULL);
-    glUniformMatrix4fv(matrixID, 1, GL_FALSE, mvp.raw);
+    // glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, mvp.raw);
 
     glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
                    0);
