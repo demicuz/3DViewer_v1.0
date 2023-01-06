@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include <3DViewer.h>
 #include <gl-wrapper.h>
@@ -60,22 +59,6 @@ GLFWwindow *get_glfw_window(void) {
   return window;
 }
 
-t_mat4 *put_into_unit_box(t_bbox *bbox, t_mat4 *dest) {
-  t_vec3 translation =
-      vec3((bbox->x_min + bbox->x_max) / 2, (bbox->y_min + bbox->y_max) / 2,
-           (bbox->z_min + bbox->z_max) / 2);
-  mat4_translate(dest, &translation, NULL);
-
-  float x_span = bbox->x_max - bbox->x_min;
-  float y_span = bbox->y_max - bbox->y_min;
-  float z_span = bbox->z_max - bbox->z_min;
-  float max_span = fmaxf(fmaxf(x_span, y_span), z_span);
-  t_vec3 scale = vec3(1.0f / max_span, 1.0f / max_span, 1.0f / max_span);
-  mat4_scale(dest, &scale, NULL);
-
-  return dest;
-}
-
 bool init_obj(t_object *obj) {
   mat4_set_identity(&obj->model);
 
@@ -85,7 +68,7 @@ bool init_obj(t_object *obj) {
                        .y_max = 1,
                        .z_min = -1,
                        .z_max = 1};
-  put_into_unit_box(&obj->bbox, &obj->model);
+  mat4_unit_box(&obj->bbox, &obj->model);
 
   mat4_set_identity(&obj->view);
 

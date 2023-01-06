@@ -12,15 +12,6 @@
 #define ASPECT (float)WIDTH / (float)HEIGHT
 
 typedef struct {
-  float x_min;
-  float x_max;
-  float y_min;
-  float y_max;
-  float z_min;
-  float z_max;
-} t_bbox;
-
-typedef struct {
   t_bbox bbox;
   t_mat4 model;
   t_mat4 view;

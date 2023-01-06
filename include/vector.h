@@ -38,6 +38,18 @@ typedef union {
   };
 } t_mat4;
 
+typedef union {
+  float raw[6];
+  struct {
+    float x_min;
+    float x_max;
+    float y_min;
+    float y_max;
+    float z_min;
+    float z_max;
+  };
+} t_bbox;
+
 // vec3
 t_vec3 vec3(float x, float y, float z);
 
@@ -54,6 +66,7 @@ t_mat4 *mat4_perspective(float fovy, float aspect, float near, float far,
                          t_mat4 *dest);
 // TODO probably remove lookAt, as the camera will always point to the same spot
 t_mat4 *mat4_lookAt(t_vec3 *eye, t_vec3 *center, t_vec3 *up, t_mat4 *dest);
+t_mat4 *mat4_unit_box(t_bbox *bbox, t_mat4 *dest);
 
 // t_vec3   vec3(float x, float y, float z);
 // t_vec3   v_add(t_vec3 a, t_vec3 b);
