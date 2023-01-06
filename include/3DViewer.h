@@ -6,6 +6,6 @@
 
 #define WIDTH 800
 #define HEIGHT 600
-#define ASPECT (float) WIDTH / (float) HEIGHT
+#define ASPECT (float)WIDTH / (float)HEIGHT
 
 #endif
