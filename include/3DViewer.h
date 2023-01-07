@@ -15,9 +15,15 @@
 
 typedef struct {
   t_bbox bbox;
+
   t_mat4 model;
   t_mat4 view;
   t_mat4 proj;
+
+  t_vec3 translation;
+  t_vec3 rotation;
+  float scale;
+
   GLint gl_matrix_id;
 } t_object;
 

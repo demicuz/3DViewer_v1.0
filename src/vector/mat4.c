@@ -108,6 +108,42 @@ t_mat4 *mat4_scale(t_mat4 *mat, t_vec3 *vec, t_mat4 *dest) {
   return dest;
 }
 
+t_mat4 *mat4_scale_float(t_mat4 *mat, float scale, t_mat4 *dest) {
+  if (!dest || mat == dest) {
+    mat->raw[0] *= scale;
+    mat->raw[1] *= scale;
+    mat->raw[2] *= scale;
+    mat->raw[3] *= scale;
+    mat->raw[4] *= scale;
+    mat->raw[5] *= scale;
+    mat->raw[6] *= scale;
+    mat->raw[7] *= scale;
+    mat->raw[8] *= scale;
+    mat->raw[9] *= scale;
+    mat->raw[10] *= scale;
+    mat->raw[11] *= scale;
+    return mat;
+  }
+
+  dest->raw[0] = mat->raw[0] * scale;
+  dest->raw[1] = mat->raw[1] * scale;
+  dest->raw[2] = mat->raw[2] * scale;
+  dest->raw[3] = mat->raw[3] * scale;
+  dest->raw[4] = mat->raw[4] * scale;
+  dest->raw[5] = mat->raw[5] * scale;
+  dest->raw[6] = mat->raw[6] * scale;
+  dest->raw[7] = mat->raw[7] * scale;
+  dest->raw[8] = mat->raw[8] * scale;
+  dest->raw[9] = mat->raw[9] * scale;
+  dest->raw[10] = mat->raw[10] * scale;
+  dest->raw[11] = mat->raw[11] * scale;
+  dest->raw[12] = mat->raw[12];
+  dest->raw[13] = mat->raw[13];
+  dest->raw[14] = mat->raw[14];
+  dest->raw[15] = mat->raw[15];
+  return dest;
+}
+
 // axis is a normalized vector
 t_mat4 *mat4_rotate(t_mat4 *mat, float angle, t_vec3 *axis, t_mat4 *dest) {
   float x = axis->raw[0], y = axis->raw[1], z = axis->raw[2], s, c, t, a00, a01,
@@ -445,8 +481,7 @@ t_mat4 *mat4_unit_box(t_bbox *bbox, t_mat4 *dest) {
   float y_span = bbox->y_max - bbox->y_min;
   float z_span = bbox->z_max - bbox->z_min;
   float max_span = fmaxf(fmaxf(x_span, y_span), z_span);
-  t_vec3 scale = vec3(1.0f / max_span, 1.0f / max_span, 1.0f / max_span);
-  mat4_scale(dest, &scale, NULL);
+  mat4_scale_float(dest, 1.0f / max_span, NULL);
 
   return dest;
 }

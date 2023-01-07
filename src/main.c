@@ -10,6 +10,9 @@
 #include <vector.h>
 
 bool init_obj(t_object *obj) {
+  *obj = (t_object){0};
+  obj->scale = 1;
+
   mat4_set_identity(&obj->model);
 
   obj->bbox = (t_bbox){.x_min = -1,
@@ -22,17 +25,25 @@ bool init_obj(t_object *obj) {
 
   mat4_set_identity(&obj->view);
 
-  t_vec3 translation = vec3(0, 0, -CAMERA_DISTANCE);
-  mat4_translate(&obj->view, &translation, NULL);
-
-  mat4_rotateY(&obj->view, 0.2f, NULL);
-
-  // t_vec3 scale = vec3(0.5f, 0.5f, 0.5f);
-  // mat4_scale(&obj->view, &scale, NULL);
+  obj->translation.z = -CAMERA_DISTANCE;
+  mat4_translate(&obj->view, &obj->translation, NULL);
 
   mat4_perspective(FOV, ASPECT, 0.1f, 1e5f, &obj->proj);
 
   return true;
+}
+
+void update_obj_view(t_object *obj) {
+  mat4_set_identity(&obj->view);
+
+  obj->translation.z -= CAMERA_DISTANCE;
+  mat4_translate(&obj->view, &obj->translation, NULL);
+
+  mat4_rotateX(&obj->view, obj->rotation.x, NULL);
+  mat4_rotateY(&obj->view, obj->rotation.y, NULL);
+  mat4_rotateZ(&obj->view, obj->rotation.z, NULL);
+
+  mat4_scale_float(&obj->view, obj->scale, NULL);
 }
 
 int main(void) {
