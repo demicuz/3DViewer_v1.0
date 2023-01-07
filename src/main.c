@@ -1,3 +1,7 @@
+#include "3DViewer.h"
+#include "gl-wrapper.h"
+#include "vector.h"
+
 #define GLFW_INCLUDE_NONE
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -5,10 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-#include <3DViewer.h>
-#include <gl-wrapper.h>
-#include <vector.h>
 
 bool init_obj(t_object *obj) {
   *obj = (t_object){0};

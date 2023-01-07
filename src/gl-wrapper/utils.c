@@ -1,11 +1,11 @@
+#include "3DViewer.h"
+
 #define GLFW_INCLUDE_NONE
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <3DViewer.h>
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action,
                   int mode) {

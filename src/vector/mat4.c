@@ -1,7 +1,7 @@
+#include "vector.h"
+
 #include <stddef.h>
 #include <math.h>
-
-#include <vector.h>
 
 t_mat4 mat4_create_identity(void) {
   t_mat4 result = {{0.0f}};
