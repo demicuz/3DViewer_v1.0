@@ -174,6 +174,106 @@ t_mat4 *mat4_rotate(t_mat4 *mat, float angle, t_vec3 *axis, t_mat4 *dest) {
   return dest;
 }
 
+t_mat4 *mat4_rotateX(t_mat4 *mat, float angle, t_mat4 *dest) {
+  float s = sinf(angle), c = cosf(angle), a10 = mat->raw[4], a11 = mat->raw[5],
+        a12 = mat->raw[6], a13 = mat->raw[7], a20 = mat->raw[8],
+        a21 = mat->raw[9], a22 = mat->raw[10], a23 = mat->raw[11];
+
+  if (!dest) {
+    dest = mat;
+  } else if (mat != dest) { // If the source and destination differ, copy the
+                            // unchanged rows
+    dest->raw[0] = mat->raw[0];
+    dest->raw[1] = mat->raw[1];
+    dest->raw[2] = mat->raw[2];
+    dest->raw[3] = mat->raw[3];
+
+    dest->raw[12] = mat->raw[12];
+    dest->raw[13] = mat->raw[13];
+    dest->raw[14] = mat->raw[14];
+    dest->raw[15] = mat->raw[15];
+  }
+
+  // Perform axis-specific matrix multiplication
+  dest->raw[4] = a10 * c + a20 * s;
+  dest->raw[5] = a11 * c + a21 * s;
+  dest->raw[6] = a12 * c + a22 * s;
+  dest->raw[7] = a13 * c + a23 * s;
+
+  dest->raw[8] = a10 * -s + a20 * c;
+  dest->raw[9] = a11 * -s + a21 * c;
+  dest->raw[10] = a12 * -s + a22 * c;
+  dest->raw[11] = a13 * -s + a23 * c;
+  return dest;
+}
+
+t_mat4 *mat4_rotateY(t_mat4 *mat, float angle, t_mat4 *dest) {
+  float s = sinf(angle), c = cosf(angle), a00 = mat->raw[0], a01 = mat->raw[1],
+        a02 = mat->raw[2], a03 = mat->raw[3], a20 = mat->raw[8],
+        a21 = mat->raw[9], a22 = mat->raw[10], a23 = mat->raw[11];
+
+  if (!dest) {
+    dest = mat;
+  } else if (mat != dest) { // If the source and destination differ, copy the
+                            // unchanged rows
+    dest->raw[4] = mat->raw[4];
+    dest->raw[5] = mat->raw[5];
+    dest->raw[6] = mat->raw[6];
+    dest->raw[7] = mat->raw[7];
+
+    dest->raw[12] = mat->raw[12];
+    dest->raw[13] = mat->raw[13];
+    dest->raw[14] = mat->raw[14];
+    dest->raw[15] = mat->raw[15];
+  }
+
+  // Perform axis-specific matrix multiplication
+  dest->raw[0] = a00 * c + a20 * -s;
+  dest->raw[1] = a01 * c + a21 * -s;
+  dest->raw[2] = a02 * c + a22 * -s;
+  dest->raw[3] = a03 * c + a23 * -s;
+
+  dest->raw[8] = a00 * s + a20 * c;
+  dest->raw[9] = a01 * s + a21 * c;
+  dest->raw[10] = a02 * s + a22 * c;
+  dest->raw[11] = a03 * s + a23 * c;
+  return dest;
+}
+
+t_mat4 *mat4_rotateZ(t_mat4 *mat, float angle, t_mat4 *dest) {
+  float s = sinf(angle), c = cosf(angle), a00 = mat->raw[0], a01 = mat->raw[1],
+        a02 = mat->raw[2], a03 = mat->raw[3], a10 = mat->raw[4],
+        a11 = mat->raw[5], a12 = mat->raw[6], a13 = mat->raw[7];
+
+  if (!dest) {
+    dest = mat;
+  } else if (mat != dest) { // If the source and destination differ, copy the
+                            // unchanged last row
+    dest->raw[8] = mat->raw[8];
+    dest->raw[9] = mat->raw[9];
+    dest->raw[10] = mat->raw[10];
+    dest->raw[11] = mat->raw[11];
+
+    dest->raw[12] = mat->raw[12];
+    dest->raw[13] = mat->raw[13];
+    dest->raw[14] = mat->raw[14];
+    dest->raw[15] = mat->raw[15];
+  }
+
+  // Perform axis-specific matrix multiplication
+  dest->raw[0] = a00 * c + a10 * s;
+  dest->raw[1] = a01 * c + a11 * s;
+  dest->raw[2] = a02 * c + a12 * s;
+  dest->raw[3] = a03 * c + a13 * s;
+
+  dest->raw[4] = a00 * -s + a10 * c;
+  dest->raw[5] = a01 * -s + a11 * c;
+  dest->raw[6] = a02 * -s + a12 * c;
+  dest->raw[7] = a03 * -s + a13 * c;
+
+  return dest;
+}
+
 t_mat4 *mat4_translate(t_mat4 *mat, t_vec3 *vec, t_mat4 *dest) {
   float *m = mat->raw;
   float *v = vec->raw;

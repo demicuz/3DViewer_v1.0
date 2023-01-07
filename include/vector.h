@@ -60,6 +60,9 @@ t_mat4 *mat4_multiply(t_mat4 *mat, t_mat4 *mat2, t_mat4 *dest);
 
 t_mat4 *mat4_scale(t_mat4 *mat, t_vec3 *vec, t_mat4 *dest);
 t_mat4 *mat4_rotate(t_mat4 *mat, float angle, t_vec3 *axis, t_mat4 *dest);
+t_mat4 *mat4_rotateX(t_mat4 *mat, float angle, t_mat4 *dest);
+t_mat4 *mat4_rotateY(t_mat4 *mat, float angle, t_mat4 *dest);
+t_mat4 *mat4_rotateZ(t_mat4 *mat, float angle, t_mat4 *dest);
 t_mat4 *mat4_translate(t_mat4 *mat, t_vec3 *vec, t_mat4 *dest);
 
 t_mat4 *mat4_perspective(float fovy, float aspect, float near, float far,

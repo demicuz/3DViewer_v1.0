@@ -10,6 +10,8 @@
 #define WIDTH 800
 #define HEIGHT 600
 #define ASPECT (float)WIDTH / (float)HEIGHT
+#define CAMERA_DISTANCE 2
+#define FOV 40
 
 typedef struct {
   t_bbox bbox;

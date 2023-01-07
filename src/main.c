@@ -22,17 +22,15 @@ bool init_obj(t_object *obj) {
 
   mat4_set_identity(&obj->view);
 
-  t_vec3 translation = vec3(0, 0, -2);
+  t_vec3 translation = vec3(0, 0, -CAMERA_DISTANCE);
   mat4_translate(&obj->view, &translation, NULL);
 
-  t_vec3 y_axis = vec3(0, 1, 0);
-  mat4_rotate(&obj->view, 0.2f, &y_axis, NULL);
+  mat4_rotateY(&obj->view, 0.2f, NULL);
 
   // t_vec3 scale = vec3(0.5f, 0.5f, 0.5f);
   // mat4_scale(&obj->view, &scale, NULL);
 
-  mat4_set_identity(&obj->proj);
-  mat4_perspective(40.0f, ASPECT, 0.1f, 1e5f, &obj->proj);
+  mat4_perspective(FOV, ASPECT, 0.1f, 1e5f, &obj->proj);
 
   return true;
 }
