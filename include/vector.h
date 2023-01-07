@@ -19,34 +19,14 @@ typedef union {
     float v4[4];
   };
   struct {
-    float x1;
-    float y1;
-    float z1;
-    float w1;
-    float x2;
-    float y2;
-    float z2;
-    float w2;
-    float x3;
-    float y3;
-    float z3;
-    float w3;
-    float x4;
-    float y4;
-    float z4;
-    float w4;
+    float x1, y1, z1, w1, x2, y2, z2, w2, x3, y3, z3, w3, x4, y4, z4, w4;
   };
 } t_mat4;
 
 typedef union {
   float raw[6];
   struct {
-    float x_min;
-    float x_max;
-    float y_min;
-    float y_max;
-    float z_min;
-    float z_max;
+    float x_min, x_max, y_min, y_max, z_min, z_max;
   };
 } t_bbox;
 

@@ -20,6 +20,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
+// TODO go fullscreen, use glfwGetWindowSize() to get screen width and height
 GLFWwindow *get_glfw_window(void) {
   if (glfwInit() == GLFW_FALSE) {
     (void)fprintf(stderr, "Failed to initialize GLFW\n");

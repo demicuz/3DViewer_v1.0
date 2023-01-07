@@ -111,7 +111,7 @@ int main(void) {
 
   t_mat4 mvp;
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(3.0f);
 
   while (!glfwWindowShouldClose(window)) {
@@ -120,12 +120,14 @@ int main(void) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Render
+    // TODO probably should update OpenGL state after GUI messes around with it
     // glUseProgram(shaderProgram);
     // glBindVertexArray(VAO);
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     obj.rotation.y = fmodf(obj.rotation.y + 0.01f, 6.28318530718f);
+    obj.rotation.z = fmodf(obj.rotation.z + 0.02f, 6.28318530718f);
     update_obj_view(&obj);
     mat4_multiply(&obj.proj, &obj.view, &mvp);
     mat4_multiply(&mvp, &obj.model, &mvp);
@@ -139,10 +141,8 @@ int main(void) {
     // Swap the screen buffers
     glfwSwapBuffers(window);
 
-    // Check if any events have been activated (key pressed, mouse moved etc.)
-    // and call corresponding response functions
-    glfwPollEvents();
-    // glfwWaitEvents();
+    glfwPollEvents(); // Update 60 times per second
+    // glfwWaitEvents(); // Update only on key press, mouse move, etc.
   }
 
   glDeleteVertexArrays(1, &VAO);
