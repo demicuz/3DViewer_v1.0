@@ -65,6 +65,8 @@ t_mat4 *mat4_rotateX(t_mat4 *mat, float angle, t_mat4 *dest);
 t_mat4 *mat4_rotateY(t_mat4 *mat, float angle, t_mat4 *dest);
 t_mat4 *mat4_rotateZ(t_mat4 *mat, float angle, t_mat4 *dest);
 t_mat4 *mat4_translate(t_mat4 *mat, t_vec3 *vec, t_mat4 *dest);
+// TODO probably remove *dest everywhere
+t_mat4 *mat4_translateZ(t_mat4 *mat, float z);
 
 t_mat4 *mat4_perspective(float fovy, float aspect, float near, float far,
                          t_mat4 *dest);

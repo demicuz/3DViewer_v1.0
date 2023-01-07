@@ -358,6 +358,16 @@ t_mat4 *mat4_translate(t_mat4 *mat, t_vec3 *vec, t_mat4 *dest) {
   return dest;
 }
 
+t_mat4 *mat4_translateZ(t_mat4 *mat, float z) {
+  float *m = mat->raw;
+
+  m[12] = m[8] * z + m[12];
+  m[13] = m[9] * z + m[13];
+  m[14] = m[10] * z + m[14];
+  m[15] = m[11] * z + m[15];
+  return mat;
+}
+
 t_mat4 *mat4_frustum(float left, float right, float bottom, float top,
                      float near, float far, t_mat4 *dest) {
   float rl = (right - left);

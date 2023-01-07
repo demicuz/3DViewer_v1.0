@@ -15,7 +15,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action,
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  // TODO also update projection matrix, as it depends on the aspect ratio
+  // TODO: Also update projection matrix, as it depends on the aspect ratio.
+  // You can't do that without globals, as GLFW lacks custom window data.
   glViewport(0, 0, width, height);
 }
 
