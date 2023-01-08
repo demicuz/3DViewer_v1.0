@@ -4,6 +4,7 @@
 .clang-tidy
 *.o
 *.d
+*.a
 
 compile_commands.json
 *.sublime-*
