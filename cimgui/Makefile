@@ -8,6 +8,8 @@ OBJS += ./imgui/imgui_draw.o
 OBJS += ./imgui/imgui_demo.o
 OBJS += ./imgui/imgui_tables.o
 OBJS += ./imgui/imgui_widgets.o
+OBJS += ./imgui/backends/imgui_impl_opengl3.o
+OBJS += ./imgui/backends/imgui_impl_glfw.o
 
 CXXFLAGS=-O2 -fno-exceptions -fno-rtti
 
@@ -47,7 +49,7 @@ ifeq ($(OS), Windows_NT)
 endif
 
 .cpp.o:
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) -DIMGUI_IMPL_API="extern \"C\"" $(CXXFLAGS) -c -o $@ $<
 
 all:$(OUTPUTNAME)
 	@echo Build complete for $(ECHO_MESSAGE)
