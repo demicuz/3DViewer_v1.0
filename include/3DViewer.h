@@ -19,6 +19,7 @@ typedef struct {
   t_mat4 model;
   t_mat4 view;
   t_mat4 proj;
+  t_mat4 mvp;
 
   t_vec3 translation;
   t_vec3 rotation;

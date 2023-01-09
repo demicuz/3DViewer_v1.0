@@ -32,7 +32,7 @@ bool init_obj(t_object *obj) {
   return true;
 }
 
-void update_obj_view(t_object *obj) {
+void update_view_mat(t_object *obj) {
   mat4_set_identity(&obj->view);
 
   mat4_translateZ(&obj->view, -CAMERA_DISTANCE);
@@ -109,8 +109,6 @@ int main(void) {
   init_obj(&obj);
   obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
 
-  t_mat4 mvp;
-
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(3.0f);
 
@@ -128,10 +126,11 @@ int main(void) {
 
     obj.rotation.y = fmodf(obj.rotation.y + 0.01f, 6.28318530718f);
     obj.rotation.z = fmodf(obj.rotation.z + 0.02f, 6.28318530718f);
-    update_obj_view(&obj);
-    mat4_multiply(&obj.proj, &obj.view, &mvp);
-    mat4_multiply(&mvp, &obj.model, &mvp);
-    glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, mvp.raw);
+    update_view_mat(&obj);
+    // TODO update_proj_mat(&obj) in case we're gonna change FOV
+    mat4_multiply(&obj.proj, &obj.view, &obj.mvp);
+    mat4_multiply(&obj.mvp, &obj.model, &obj.mvp);
+    glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, obj.mvp.raw);
 
     glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
                    0);
