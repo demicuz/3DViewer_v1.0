@@ -12,10 +12,20 @@ OBJ			:= $(SRC:.c=.o)
 # TODO set correct flags
 # TODO also compile for macOS
 CC			:= gcc -fdiagnostics-color=always
-CPPFLAGS	:= -I include -MMD -MP
+CPPFLAGS	:= -I include -MMD -MP -DCIMGUI_USE_OPENGL3 -DCIMGUI_USE_GLFW
 CFLAGS		:= -std=c11 -pedantic -Og -g -Wall#-Wextra#-Werror
-LDFLAGS		:=
-LDLIBS		:= -lglfw -lGL -lm
+LDFLAGS		:= -L $(LIB_DIR)
+LDLIBS		:= -lglfw -lGL -lm -lcimgui -lstdc++
+
+# TODO detect platforms like this:
+# UNAME_S		:= $(shell uname -s)
+# ifeq ($(UNAME_S), Linux) #LINUX
+# 	ECHO_MESSAGE = "Linux"
+# endif
+
+# ifeq ($(UNAME_S), Darwin) #APPLE
+# 	ECHO_MESSAGE = "macOS"
+# endif
 
 .PHONY: all bonus clean fclean re
 
@@ -23,6 +33,7 @@ all: $(NAME)
 
 bonus: $(NAME)
 
+# TODO maybe dynamic lib also fine?
 $(LIBCIMGUI): $(LIB_DIR)
 	$(MAKE) --directory=$(CIMGUI_DIR) static
 	cp $(CIMGUI_DIR)/libcimgui.a $(LIB_DIR)
