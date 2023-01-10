@@ -14,18 +14,18 @@ CC			:= gcc -fdiagnostics-color=always
 CPPFLAGS	:= -I include -MMD -MP -DCIMGUI_USE_OPENGL3 -DCIMGUI_USE_GLFW
 CFLAGS		:= -std=c11 -pedantic -Og -g -Wall#-Wextra#-Werror
 LDFLAGS		:= -L $(LIB_DIR)
-LDLIBS		:= -lglfw -lcimgui
+LDLIBS		:= -lcimgui
 
 UNAME_S		:= $(shell uname -s)
 ifeq ($(UNAME_S), Linux) #LINUX
-	LDLIBS	+= -lGL -lm -lstdc++
+	LDLIBS	+= -lGL -lstdc++ `pkg-config --static --libs glfw3`
 endif
 
 # TODO test macOS compilation
 ifeq ($(UNAME_S), Darwin) #APPLE
 	CPPFLAGS	+= -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include
 	LDFLAGS		+= -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib
-	LDLIBS		+= -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
+	LDLIBS		+= -lglfw -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 endif
 
 .PHONY: all bonus clean fclean re
