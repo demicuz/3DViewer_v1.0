@@ -43,7 +43,13 @@ void render_ui(t_app *app, t_object *obj) {
   igBegin("Hello, world!", NULL, 0);
   igText("This is some useful text");
 
-  igSliderFloat("Float", &obj->scale, 0.0f, 2.0f, "%.3f", 0);
+  igSliderFloat("Scale", &obj->scale, 0, 2, "%.3f", 0);
+  igSliderFloat("Translation X", &obj->translation.x, -1, 1, "%.3f", 0);
+  igSliderFloat("Translation Y", &obj->translation.y, -1, 1, "%.3f", 0);
+  igSliderFloat("Translation Z", &obj->translation.z, -1, 1, "%.3f", 0);
+  igSliderFloat("Rotation X", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igSliderFloat("Rotation Y", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igSliderFloat("Rotation Z", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
 
   ImVec2 buttonSize;
   buttonSize.x = 0;

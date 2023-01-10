@@ -122,10 +122,10 @@ int main(void) {
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    t = (float) glfwGetTime();
-    obj.translation.x = sinf(t) / 2;
-    obj.rotation.y = t;
-    obj.rotation.z = 2 * t;
+    // t = (float) glfwGetTime();
+    // obj.translation.x = sinf(t) / 2;
+    // obj.rotation.y = t;
+    // obj.rotation.z = 2 * t;
     // obj.scale = 0.8f + cosf(2.71828f * t + 0.3f) * 0.2f;
     update_view_mat(&obj);
     // TODO update_proj_mat(&obj) in case we're gonna change FOV
