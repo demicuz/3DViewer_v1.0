@@ -1,7 +1,9 @@
 #ifndef _3DVIEWER_H
 #define _3DVIEWER_H
 
+#define GLFW_INCLUDE_NONE
 #include "glad/gl.h"
+#include <GLFW/glfw3.h>
 #include "vector.h"
 
 #include <stdbool.h>
@@ -30,5 +32,14 @@ typedef struct {
 
   GLint gl_matrix_id;
 } t_object;
+
+typedef struct {
+  bool show_ui;
+} t_app;
+
+// ui
+void init_ui(GLFWwindow *window);
+void render_ui(t_app *app);
+void ui_cleanup(void);
 
 #endif

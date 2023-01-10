@@ -47,6 +47,7 @@ void update_view_mat(t_object *obj) {
 
 int main(void) {
   GLFWwindow *window = get_glfw_window();
+  init_ui(window);
 
   GLuint shaderProgram;
   if (!create_line_shader_program(&shaderProgram)) {
@@ -113,12 +114,8 @@ int main(void) {
   glLineWidth(3.0f);
 
   float t = 0;
+  t_app app = {0};
   while (!glfwWindowShouldClose(window)) {
-    // Clear the colorbuffer
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // Render
     // TODO probably should update OpenGL state after GUI messes around with it
     // glUseProgram(shaderProgram);
     // glBindVertexArray(VAO);
@@ -136,10 +133,14 @@ int main(void) {
     mat4_multiply(&obj.mvp, &obj.model, &obj.mvp);
     glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, obj.mvp.raw);
 
+    // Render
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
                    0);
     // glMultiDrawElements(GL_LINE_LOOP, cube_counts, GL_UNSIGNED_INT, (const
     // void **) cube_indices, sizeof cube_counts / sizeof (GLsizei));
+    render_ui(&app);
 
     // Swap the screen buffers
     glfwSwapBuffers(window);
@@ -153,6 +154,7 @@ int main(void) {
   glDeleteBuffers(1, &EBO);
   glDeleteProgram(shaderProgram);
 
+  ui_cleanup();
   // Terminates GLFW, clearing any resources allocated by GLFW.
   glfwTerminate();
   exit(0);
