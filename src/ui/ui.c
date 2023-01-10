@@ -38,29 +38,31 @@ void render_ui(t_app *app, t_object *obj) {
 
   // igShowDemoWindow(&app->show_ui);
 
-  static int counter = 0;
+  // static int counter = 0;
 
-  igBegin("Hello, world!", NULL, 0);
-  igText("This is some useful text");
+  igBegin("Affine transformations", NULL, 0);
 
-  igSliderFloat("Scale", &obj->scale, 0, 2, "%.3f", 0);
-  igSliderFloat("Translation X", &obj->translation.x, -1, 1, "%.3f", 0);
-  igSliderFloat("Translation Y", &obj->translation.y, -1, 1, "%.3f", 0);
-  igSliderFloat("Translation Z", &obj->translation.z, -1, 1, "%.3f", 0);
-  igSliderFloat("Rotation X", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  igSliderFloat("Rotation Y", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  igSliderFloat("Rotation Z", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igText("Translation");
+  igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
+  igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
+  igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
+  igText("Rotation");
+  igSliderFloat("X", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igSliderFloat("Y", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igSliderFloat("Z", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igText("Scale");
+  igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
 
-  ImVec2 buttonSize;
-  buttonSize.x = 0;
-  buttonSize.y = 0;
-  if (igButton("Button", buttonSize))
-    counter++;
-  igSameLine(0.0f, -1.0f);
-  igText("counter = %d", counter);
+  // ImVec2 buttonSize;
+  // buttonSize.x = 0;
+  // buttonSize.y = 0;
+  // if (igButton("Button", buttonSize))
+  //   counter++;
+  // igSameLine(0.0f, -1.0f);
+  // igText("counter = %d", counter);
 
-  igText("Application average %.3f ms/frame (%.1f FPS)",
-         1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+  // igText("Application average %.3f ms/frame (%.1f FPS)",
+         // 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
   igEnd();
 
   igRender();

@@ -145,8 +145,8 @@ int main(void) {
     // Swap the screen buffers
     glfwSwapBuffers(window);
 
-    glfwPollEvents(); // Update 60 times per second
-    // glfwWaitEvents(); // Update only on key press, mouse move, etc.
+    // glfwPollEvents(); // Update 60 times per second
+    glfwWaitEvents(); // Update only on key press, mouse move, etc.
   }
 
   glDeleteVertexArrays(1, &VAO);
