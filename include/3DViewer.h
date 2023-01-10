@@ -4,9 +4,12 @@
 #include "glad/gl.h"
 #include "vector.h"
 
+#include <stdbool.h>
+
 // const int WIDTH = 800, HEIGHT = 600;
 // const float ASPECT = (float) WIDTH / (float) HEIGHT;
 
+#define VSYNC false
 #define WIDTH 800
 #define HEIGHT 600
 #define ASPECT (float)WIDTH / (float)HEIGHT

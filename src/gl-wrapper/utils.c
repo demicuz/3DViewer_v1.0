@@ -41,6 +41,9 @@ GLFWwindow *get_glfw_window(void) {
     exit(1);
   }
   glfwMakeContextCurrent(window);
+  if (VSYNC) {
+    glfwSwapInterval(1);
+  }
 
   glfwSetKeyCallback(window, key_callback);
 
