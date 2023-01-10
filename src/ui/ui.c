@@ -47,9 +47,9 @@ void render_ui(t_app *app, t_object *obj) {
   igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
   igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
   igText("Rotation");
-  igSliderFloat("X", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  igSliderFloat("Y", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  igSliderFloat("Z", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igSliderFloat("OX", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igSliderFloat("OY", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  igSliderFloat("OZ", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
   igText("Scale");
   igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
 
