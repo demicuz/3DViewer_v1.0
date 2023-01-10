@@ -125,6 +125,7 @@ int main(void) {
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+    t = (float) glfwGetTime();
     obj.translation.x = sinf(t) / 2;
     obj.rotation.y = t;
     obj.rotation.z = 2 * t;
@@ -145,7 +146,6 @@ int main(void) {
 
     glfwPollEvents(); // Update 60 times per second
     // glfwWaitEvents(); // Update only on key press, mouse move, etc.
-    t = fmodf(t + 0.01f, 100000);
   }
 
   glDeleteVertexArrays(1, &VAO);
