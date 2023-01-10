@@ -11,7 +11,7 @@
 // const int WIDTH = 800, HEIGHT = 600;
 // const float ASPECT = (float) WIDTH / (float) HEIGHT;
 
-#define VSYNC false
+#define VSYNC true
 #define WIDTH 800
 #define HEIGHT 600
 #define ASPECT (float)WIDTH / (float)HEIGHT
