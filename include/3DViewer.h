@@ -12,8 +12,8 @@
 // const float ASPECT = (float) WIDTH / (float) HEIGHT;
 
 #define VSYNC true
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 1200
+#define HEIGHT 800
 #define ASPECT (float)WIDTH / (float)HEIGHT
 #define CAMERA_DISTANCE 2
 #define FOV 40
