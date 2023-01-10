@@ -112,6 +112,7 @@ int main(void) {
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(3.0f);
 
+  float t = 0;
   while (!glfwWindowShouldClose(window)) {
     // Clear the colorbuffer
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -124,8 +125,10 @@ int main(void) {
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    obj.rotation.y = fmodf(obj.rotation.y + 0.01f, 6.28318530718f);
-    obj.rotation.z = fmodf(obj.rotation.z + 0.02f, 6.28318530718f);
+    obj.translation.x = sinf(t) / 2;
+    obj.rotation.y = t;
+    obj.rotation.z = 2 * t;
+    obj.scale = 0.8f + cosf(2.71828f * t + 0.3f) * 0.2f;
     update_view_mat(&obj);
     // TODO update_proj_mat(&obj) in case we're gonna change FOV
     mat4_multiply(&obj.proj, &obj.view, &obj.mvp);
@@ -142,6 +145,7 @@ int main(void) {
 
     glfwPollEvents(); // Update 60 times per second
     // glfwWaitEvents(); // Update only on key press, mouse move, etc.
+    t = fmodf(t + 0.01f, 100000);
   }
 
   glDeleteVertexArrays(1, &VAO);
