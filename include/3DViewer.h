@@ -34,12 +34,13 @@ typedef struct {
 } t_object;
 
 typedef struct {
+  t_object *obj;
   bool show_ui;
 } t_app;
 
 // ui
 void init_ui(GLFWwindow *window);
-void render_ui(t_app *app);
+void render_ui(t_app *app, t_object *obj);
 void ui_cleanup(void);
 
 #endif

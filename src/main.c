@@ -126,7 +126,7 @@ int main(void) {
     obj.translation.x = sinf(t) / 2;
     obj.rotation.y = t;
     obj.rotation.z = 2 * t;
-    obj.scale = 0.8f + cosf(2.71828f * t + 0.3f) * 0.2f;
+    // obj.scale = 0.8f + cosf(2.71828f * t + 0.3f) * 0.2f;
     update_view_mat(&obj);
     // TODO update_proj_mat(&obj) in case we're gonna change FOV
     mat4_multiply(&obj.proj, &obj.view, &obj.mvp);
@@ -140,7 +140,7 @@ int main(void) {
                    0);
     // glMultiDrawElements(GL_LINE_LOOP, cube_counts, GL_UNSIGNED_INT, (const
     // void **) cube_indices, sizeof cube_counts / sizeof (GLsizei));
-    render_ui(&app);
+    render_ui(&app, &obj);
 
     // Swap the screen buffers
     glfwSwapBuffers(window);

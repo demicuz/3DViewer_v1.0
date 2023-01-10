@@ -30,13 +30,32 @@ void init_ui(GLFWwindow *window) {
   ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
-void render_ui(t_app *app) {
+void render_ui(t_app *app, t_object *obj) {
 	// TODO does this have an overhead?
 	ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   igNewFrame();
 
-  igShowDemoWindow(&app->show_ui);
+  // igShowDemoWindow(&app->show_ui);
+
+  static int counter = 0;
+
+  igBegin("Hello, world!", NULL, 0);
+  igText("This is some useful text");
+
+  igSliderFloat("Float", &obj->scale, 0.0f, 2.0f, "%.3f", 0);
+
+  ImVec2 buttonSize;
+  buttonSize.x = 0;
+  buttonSize.y = 0;
+  if (igButton("Button", buttonSize))
+    counter++;
+  igSameLine(0.0f, -1.0f);
+  igText("counter = %d", counter);
+
+  igText("Application average %.3f ms/frame (%.1f FPS)",
+         1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+  igEnd();
 
   igRender();
   ImGui_ImplOpenGL3_RenderDrawData(igGetDrawData());
