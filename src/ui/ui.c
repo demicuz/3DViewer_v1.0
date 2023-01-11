@@ -20,14 +20,15 @@
 
 // TODO adapt for High DPI displays
 // TODO set custom font
-void init_ui(GLFWwindow *window) {
+void init_ui(GLFWwindow *window, t_app *app) {
   const char* glsl_version = "#version 330";
 
   igCreateContext(NULL);
 
-  ImGuiIO *ioptr = igGetIO();
+  app->ioptr = igGetIO();
   // Enable Keyboard Controls
-  ioptr->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+  app->ioptr->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+  // app->ioptr->FontGlobalScale = 1.25f;
 
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init(glsl_version);
@@ -55,6 +56,9 @@ void render_ui(t_app *app, t_object *obj) {
   obj->view_was_updated |= igSliderFloat("OZ", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
   igText("Scale");
   obj->view_was_updated |= igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
+
+  igText("Font scale");
+  igDragFloat("###", &app->ioptr->FontGlobalScale, 0.005f, 0.75f, 3.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
   ImVec2 buttonSize;
   buttonSize.x = 0;

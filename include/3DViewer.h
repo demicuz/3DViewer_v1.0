@@ -1,6 +1,9 @@
 #ifndef _3DVIEWER_H
 #define _3DVIEWER_H
 
+#define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
+#include "cimgui/cimgui.h"
+
 #define GLFW_INCLUDE_NONE
 #include "glad/gl.h"
 #include <GLFW/glfw3.h>
@@ -37,10 +40,11 @@ typedef struct {
 // TODO may be obsolete
 typedef struct {
   t_object *obj;
+  ImGuiIO *ioptr;
 } t_app;
 
 // ui
-void init_ui(GLFWwindow *window);
+void init_ui(GLFWwindow *window, t_app *app);
 void render_ui(t_app *app, t_object *obj);
 void draw_ui(void);
 void ui_cleanup(void);

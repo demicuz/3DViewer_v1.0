@@ -47,8 +47,9 @@ void update_view_mat(t_object *obj) {
 }
 
 int main(void) {
+  t_app app = {0};
   GLFWwindow *window = get_glfw_window();
-  init_ui(window);
+  init_ui(window, &app);
 
   GLuint shaderProgram;
   if (!create_line_shader_program(&shaderProgram)) {
@@ -106,14 +107,13 @@ int main(void) {
   glUseProgram(shaderProgram);
 
   t_object obj;
+  app.obj = &obj;
   init_obj(&obj);
   obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
 
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(3.0f);
 
-  t_app app = {0};
-  app.obj = &obj;
   while (!glfwWindowShouldClose(window)) {
     // TODO probably should update OpenGL state after GUI messes around with it
     // glUseProgram(shaderProgram);
