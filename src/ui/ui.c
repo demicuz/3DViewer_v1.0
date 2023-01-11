@@ -6,6 +6,9 @@
 #define GLFW_INCLUDE_NONE
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+#include <nfd.h>
+
+#include <stdlib.h>
 
 #ifdef IMGUI_HAS_IMSTR
 #define igBegin igBegin_Str
@@ -53,11 +56,25 @@ void render_ui(t_app *app, t_object *obj) {
   igText("Scale");
   obj->view_was_updated |= igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
 
-  // ImVec2 buttonSize;
-  // buttonSize.x = 0;
-  // buttonSize.y = 0;
-  // if (igButton("Button", buttonSize))
-  //   counter++;
+  ImVec2 buttonSize;
+  buttonSize.x = 0;
+  buttonSize.y = 0;
+  if (igButton("Load .obj file", buttonSize)) {
+    nfdchar_t *outPath = NULL;
+    nfdresult_t result = NFD_OpenDialog(NULL, NULL, &outPath);
+
+    if (result == NFD_OKAY) {
+        puts("Success!");
+        puts(outPath);
+        free(outPath);
+    }
+    else if (result == NFD_CANCEL) {
+        puts("User pressed cancel.");
+    }
+    else {
+        printf("Error: %s\n", NFD_GetError());
+    }
+  }
   // igSameLine(0.0f, -1.0f);
   // igText("counter = %d", counter);
 
