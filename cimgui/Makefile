@@ -11,7 +11,7 @@ OBJS += ./imgui/imgui_widgets.o
 OBJS += ./imgui/backends/imgui_impl_opengl3.o
 OBJS += ./imgui/backends/imgui_impl_glfw.o
 
-CXXFLAGS=-O2 -fno-exceptions -fno-rtti
+CXXFLAGS=-O2 -fno-exceptions -fno-rtti -std=c++11
 
 UNAME_S := $(shell uname -s)
 
@@ -31,7 +31,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	ECHO_MESSAGE = "macOS"
 
 	OUTPUTNAME = cimgui.dylib
-	CXXFLAGS += -I/usr/local/include
+	CXXFLAGS += -I/usr/local/include -I./imgui/
 	CXXFLAGS += -Wall
 	LINKFLAGS = -dynamiclib
 	CFLAGS = $(CXXFLAGS)
