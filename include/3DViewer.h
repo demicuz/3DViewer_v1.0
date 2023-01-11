@@ -31,16 +31,18 @@ typedef struct {
   float scale;
 
   GLint gl_matrix_id;
+  bool view_was_updated;
 } t_object;
 
+// TODO may be obsolete
 typedef struct {
   t_object *obj;
-  bool show_ui;
 } t_app;
 
 // ui
 void init_ui(GLFWwindow *window);
 void render_ui(t_app *app, t_object *obj);
+void draw_ui(void);
 void ui_cleanup(void);
 
 #endif

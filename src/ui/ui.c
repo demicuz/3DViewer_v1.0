@@ -43,15 +43,15 @@ void render_ui(t_app *app, t_object *obj) {
   igBegin("Affine transformations", NULL, 0);
 
   igText("Translation");
-  igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
-  igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
-  igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
   igText("Rotation");
-  igSliderFloat("OX", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  igSliderFloat("OY", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  igSliderFloat("OZ", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OX", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OY", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OZ", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
   igText("Scale");
-  igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
 
   // ImVec2 buttonSize;
   // buttonSize.x = 0;
@@ -64,7 +64,9 @@ void render_ui(t_app *app, t_object *obj) {
   // igText("Application average %.3f ms/frame (%.1f FPS)",
          // 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
   igEnd();
+}
 
+void draw_ui(void) {
   igRender();
   ImGui_ImplOpenGL3_RenderDrawData(igGetDrawData());
 }

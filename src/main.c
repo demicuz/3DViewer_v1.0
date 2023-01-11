@@ -13,6 +13,7 @@
 bool init_obj(t_object *obj) {
   *obj = (t_object){0};
   obj->scale = 1;
+  obj->view_was_updated = true;
 
   mat4_set_identity(&obj->model);
 
@@ -98,8 +99,6 @@ int main(void) {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
                GL_STATIC_DRAW);
 
-  // TODO where do I put these?
-  // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
   GLint posAttrib = glGetAttribLocation(shaderProgram, "aPos");
   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, NULL);
   glEnableVertexAttribArray(posAttrib);
@@ -113,34 +112,32 @@ int main(void) {
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(3.0f);
 
-  float t = 0;
   t_app app = {0};
+  app.obj = &obj;
   while (!glfwWindowShouldClose(window)) {
     // TODO probably should update OpenGL state after GUI messes around with it
     // glUseProgram(shaderProgram);
     // glBindVertexArray(VAO);
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    // t = (float) glfwGetTime();
-    // obj.translation.x = sinf(t) / 2;
-    // obj.rotation.y = t;
-    // obj.rotation.z = 2 * t;
-    // obj.scale = 0.8f + cosf(2.71828f * t + 0.3f) * 0.2f;
-    update_view_mat(&obj);
+    render_ui(&app, &obj);
+    // If obj state was changed with UI, update MVP
+    if (obj.view_was_updated) {
+      update_view_mat(&obj);
+      mat4_multiply(&obj.proj, &obj.view, &obj.mvp);
+      mat4_multiply(&obj.mvp, &obj.model, &obj.mvp);
+      glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, obj.mvp.raw);
+      obj.view_was_updated = false;
+    }
     // TODO update_proj_mat(&obj) in case we're gonna change FOV
-    mat4_multiply(&obj.proj, &obj.view, &obj.mvp);
-    mat4_multiply(&obj.mvp, &obj.model, &obj.mvp);
-    glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, obj.mvp.raw);
 
-    // Render
+    // Draw
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
                    0);
     // glMultiDrawElements(GL_LINE_LOOP, cube_counts, GL_UNSIGNED_INT, (const
     // void **) cube_indices, sizeof cube_counts / sizeof (GLsizei));
-    render_ui(&app, &obj);
+    draw_ui();
 
     // Swap the screen buffers
     glfwSwapBuffers(window);
