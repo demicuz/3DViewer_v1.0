@@ -7,11 +7,16 @@ On Linux, install GLFW and `gtk-devel` (for "open file" dialog window). On Mac, 
 
 __Debian__ (didn't test myself, but should work):
 ```shell
-sudo apt install libglfw3-dev libgtk-3-dev
+>$ sudo apt install libglfw3-dev libgtk-3-dev
 ```
 __Fedora__:
 ```shell
-sudo dnf install glfw-devel gtk3-devel
+>$ sudo dnf install glfw-devel gtk3-devel
+```
+__MacOS__:
+```shell
+>$ mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
+>$ brew install glfw
 ```
 
 Then run `make`.
