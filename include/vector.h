@@ -1,6 +1,10 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#define floatPI 3.14159265358979323846f
+//                      ^
+//              expected precision
+
 typedef union {
   float raw[3];
   struct {

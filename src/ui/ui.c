@@ -51,9 +51,9 @@ void render_ui(t_app *app, t_object *obj) {
   obj->view_was_updated |= igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
   obj->view_was_updated |= igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
   igText("Rotation");
-  obj->view_was_updated |= igSliderFloat("OX", &obj->rotation.x, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("OY", &obj->rotation.y, -3.1415926535f, 3.1415926535f, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("OZ", &obj->rotation.z, -3.1415926535f, 3.1415926535f, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OX", &obj->rotation.x, -floatPI, floatPI, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OY", &obj->rotation.y, -floatPI, floatPI, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OZ", &obj->rotation.z, -floatPI, floatPI, "%.3f", 0);
   igText("Scale");
   obj->view_was_updated |= igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
 

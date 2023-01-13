@@ -394,7 +394,7 @@ t_mat4 *mat4_frustum(float left, float right, float bottom, float top,
 
 t_mat4 *mat4_perspective(float fovy, float aspect, float near, float far,
                          t_mat4 *dest) {
-  float top = near * tanf(fovy * 3.14159265358979323846f / 360.0f);
+  float top = near * tanf(fovy * floatPI / 360.0f);
   float right = top * aspect;
   return mat4_frustum(-right, right, -top, top, near, far, dest);
 }
