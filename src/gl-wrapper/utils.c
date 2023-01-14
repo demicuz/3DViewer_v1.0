@@ -7,20 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action,
-                  int mode) {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, GL_TRUE);
-  }
-}
-
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  // TODO: Also update projection matrix, as it depends on the aspect ratio.
-  // You can't do that without globals, as GLFW lacks custom window data.
-  glViewport(0, 0, width, height);
-}
-
-// TODO go fullscreen, use glfwGetWindowSize() to get screen width and height
 GLFWwindow *get_glfw_window(void) {
   if (glfwInit() == GLFW_FALSE) {
     (void)fprintf(stderr, "Failed to initialize GLFW\n");
@@ -37,7 +23,7 @@ GLFWwindow *get_glfw_window(void) {
   GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "3DViewer", NULL, NULL);
   if (window == NULL) {
     (void)fprintf(stderr, "Failed to create GLFW window\n");
-    glfwTerminate(); // TODO maybe not needed if completely shutting down
+    glfwTerminate();
     exit(1);
   }
   glfwMakeContextCurrent(window);
@@ -45,15 +31,12 @@ GLFWwindow *get_glfw_window(void) {
     glfwSwapInterval(1);
   }
 
-  glfwSetKeyCallback(window, key_callback);
-
   int version = gladLoadGL(glfwGetProcAddress);
   if (version == 0) {
     (void)fprintf(stderr, "Failed to initialize OpenGL context\n");
-    glfwTerminate(); // TODO maybe not needed if completely shutting down
+    glfwTerminate();
     exit(1);
   }
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   // Successfully loaded OpenGL
   printf("Loaded OpenGL %d.%d\n", GLAD_VERSION_MAJOR(version),

@@ -39,6 +39,7 @@ typedef struct {
 
 // TODO may be obsolete
 typedef struct {
+  t_vec3 bg_col;
   t_object *obj;
   ImGuiIO *ioptr;
 } t_app;

@@ -18,7 +18,6 @@
 #define igButton igButton_Str
 #endif
 
-// TODO adapt for High DPI displays
 // TODO set custom font
 void init_ui(GLFWwindow *window, t_app *app) {
   const char* glsl_version = "#version 330";
@@ -28,7 +27,30 @@ void init_ui(GLFWwindow *window, t_app *app) {
   app->ioptr = igGetIO();
   // Enable Keyboard Controls
   app->ioptr->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-  // app->ioptr->FontGlobalScale = 1.25f;
+  // app->ioptr->FontDefault;
+
+  float xscale;
+  float yscale;
+  // Get the ratio between the current DPI and the platform's default DPI.
+  // TODO does this work well for HDPI displays? Probably not:
+  // https://github.com/ocornut/imgui/issues/5081
+  glfwGetWindowContentScale(window, &xscale, &yscale);
+
+  // To get the physical size of the monitor in millimeters, use this:
+  // int widthMM, heightMM;
+  // glfwGetMonitorPhysicalSize(glfwGetPrimaryMonitor(), &widthMM, &heightMM);
+
+  // Should work for HDPI:
+  // CGFloat scale = NSScreen.mainScreen.backingScaleFactor;
+  // ImGuiStyle_ScaleAllSizes(igGetStyle(), scale);
+  // ImFontConfig cfg;
+  // cfg.SizePixels = 13.0f * scale;
+  // io.Fonts->AddFontDefault(&cfg);
+  // io.FontGlobalScale = 1.0f / scale;
+
+  if (xscale != 0) {
+    app->ioptr->FontGlobalScale = xscale;
+  }
 
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init(glsl_version);
@@ -40,29 +62,13 @@ void render_ui(t_app *app, t_object *obj) {
   ImGui_ImplGlfw_NewFrame();
   igNewFrame();
 
-  // igShowDemoWindow(&app->show_ui);
+  // static bool open;
+  // igShowDemoWindow(&open);
 
-  // static int counter = 0;
+  igBegin("Control Panel", NULL, 0);
 
-  igBegin("Affine transformations", NULL, 0);
-
-  igText("Translation");
-  obj->view_was_updated |= igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
-  igText("Rotation");
-  obj->view_was_updated |= igSliderFloat("OX", &obj->rotation.x, -floatPI, floatPI, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("OY", &obj->rotation.y, -floatPI, floatPI, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("OZ", &obj->rotation.z, -floatPI, floatPI, "%.3f", 0);
-  igText("Scale");
-  obj->view_was_updated |= igSliderFloat("##", &obj->scale, 0, 2, "%.3f", 0);
-
-  igText("Font scale");
-  igDragFloat("###", &app->ioptr->FontGlobalScale, 0.005f, 0.75f, 3.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-
-  ImVec2 buttonSize;
-  buttonSize.x = 0;
-  buttonSize.y = 0;
+  igDummy((ImVec2) {.x = 0, .y = 3});
+  ImVec2 buttonSize = {.x = 0, .y = 0};
   if (igButton("Load .obj file", buttonSize)) {
     nfdchar_t *outPath = NULL;
     nfdresult_t result = NFD_OpenDialog(NULL, NULL, &outPath);
@@ -79,11 +85,37 @@ void render_ui(t_app *app, t_object *obj) {
         printf("Error: %s\n", NFD_GetError());
     }
   }
-  // igSameLine(0.0f, -1.0f);
-  // igText("counter = %d", counter);
 
-  // igText("Application average %.3f ms/frame (%.1f FPS)",
-         // 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+  igDummy((ImVec2) {.x = 0, .y = 5});
+  igSeparator();
+
+  igDummy((ImVec2) {.x = 0, .y = 5});
+  igText("Font scale");
+  igDragFloat("###", &app->ioptr->FontGlobalScale, 0.005f, 0.75f, 3.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+
+  igDummy((ImVec2) {.x = 0, .y = 5});
+  igColorEdit3("bg_col", app->bg_col.raw, 0);
+
+  igDummy((ImVec2) {.x = 0, .y = 5});
+  igSeparator();
+
+  igDummy((ImVec2) {.x = 0, .y = 5});
+  igText("Translation");
+  // TODO obj->view_was_updated |= igSliderFloat("X", &obj->translation.x, -obj->scale, obj->scale, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
+
+  igDummy((ImVec2) {.x = 0, .y = 5});
+  igText("Rotation");
+  obj->view_was_updated |= igSliderFloat("OX", &obj->rotation.x, -floatPI, floatPI, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OY", &obj->rotation.y, -floatPI, floatPI, "%.3f", 0);
+  obj->view_was_updated |= igSliderFloat("OZ", &obj->rotation.z, -floatPI, floatPI, "%.3f", 0);
+
+  igDummy((ImVec2) {.x = 0, .y = 5});
+  igText("Scale");
+  obj->view_was_updated |= igSliderFloat("##", &obj->scale, 0.01f, 5, "%.3f", 0);
+
   igEnd();
 }
 

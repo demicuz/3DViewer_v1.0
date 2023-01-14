@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 
 bool init_obj(t_object *obj) {
   *obj = (t_object){0};
@@ -46,9 +47,34 @@ void update_view_mat(t_object *obj) {
   mat4_scale_float(&obj->view, obj->scale, NULL);
 }
 
+void update_mvp(t_object *obj) {
+  mat4_multiply(&obj->proj, &obj->view, &obj->mvp);
+  mat4_multiply(&obj->mvp, &obj->model, &obj->mvp);
+  glUniformMatrix4fv(obj->gl_matrix_id, 1, GL_FALSE, obj->mvp.raw);
+}
+
+void key_callback(GLFWwindow *window, int key, int scancode, int action,
+                  int mode) {
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, GL_TRUE);
+  }
+}
+
+// GLFW lacks custom window data in callbacks, so we have to use globals.
+static float aspect = ASPECT;
+static bool window_was_resized = false;
+void resize_callback(GLFWwindow *window, int width, int height) {
+  glViewport(0, 0, width, height);
+  aspect = (float)width / (float)height;
+  window_was_resized = true;
+}
+
 int main(void) {
   t_app app = {0};
   GLFWwindow *window = get_glfw_window();
+  glfwSetKeyCallback(window, key_callback);
+  glfwSetFramebufferSizeCallback(window, resize_callback);
+
   init_ui(window, &app);
 
   GLuint shaderProgram;
@@ -106,6 +132,7 @@ int main(void) {
 
   glUseProgram(shaderProgram);
 
+  app.bg_col = (t_vec3) {{0.2f, 0.3f, 0.3f}};
   t_object obj;
   app.obj = &obj;
   init_obj(&obj);
@@ -123,15 +150,17 @@ int main(void) {
     // If obj state was changed with UI, update MVP
     if (obj.view_was_updated) {
       update_view_mat(&obj);
-      mat4_multiply(&obj.proj, &obj.view, &obj.mvp);
-      mat4_multiply(&obj.mvp, &obj.model, &obj.mvp);
-      glUniformMatrix4fv(obj.gl_matrix_id, 1, GL_FALSE, obj.mvp.raw);
+      update_mvp(&obj);
       obj.view_was_updated = false;
+    } else if (window_was_resized) {
+      mat4_perspective(FOV, aspect, 0.1f, 1e5f, &obj.proj);
+      update_mvp(&obj);
+      window_was_resized = false;
     }
     // TODO update_proj_mat(&obj) in case we're gonna change FOV
 
     // Draw
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(app.bg_col.x, app.bg_col.y, app.bg_col.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
                    0);
