@@ -28,11 +28,11 @@ endif
 ifeq ($(UNAME_S), Darwin) #APPLE
 # 	CPPFLAGS	+= -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include
 	CPPFLAGS	+= -I/Users/$(USER)/.brew/Cellar/glfw/3.3.8/include #MacOS brew/goinfree
-#	CPPFLAGS	+= -I/usr/local/include -I/opt/local/include -I/Users/$(USER)/goinfre/homebrew/opt/glfw/include
-	CPPFLAGS	+= -I/opt/local/include -I/Users/$(USER)/.brew/Cellar/glfw/3.3.8/include #tmp mmicheli
+	CPPFLAGS	+= -I/usr/local/include -I/opt/local/include -I/Users/$(USER)/goinfre/homebrew/opt/glfw/include
+#	CPPFLAGS	+= -I/opt/local/include -I/Users/$(USER)/.brew/Cellar/glfw/3.3.8/include #tmp mmicheli
 # 	LDFLAGS		+= -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib
-#	LDFLAGS		+= -L/usr/local/lib -L/opt/local/lib -L/Users/$(USER)/goinfre/homebrew/opt/glfw/lib
-	LDFLAGS		+= -L/Users/$(USER)/.brew/Cellar/glfw/3.3.8/lib #MacOS brew/goinfree mmicheli
+	LDFLAGS		+= -L/usr/local/lib -L/Users/$(USER)/goinfre/homebrew/opt/glfw/lib
+#	LDFLAGS		+= -L/Users/$(USER)/.brew/Cellar/glfw/3.3.8/lib #MacOS brew/goinfree mmicheli
 	LDLIBS		+= -lglfw -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 	NFD_MAKE	:= $(NFD_DIR)/build/gmake_macosx
 endif
