@@ -1,6 +1,8 @@
 #include "3DViewer.h"
+#include "vector.h"
 #include "dynamic-array.h"
 
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -51,7 +53,7 @@ char *skip_whitespace(char *s) {
   return s;
 }
 
-bool parse_vertex(char **ptr, GLfloat **vertices) {
+bool parse_vertex(char **ptr, GLfloat **vertices, t_bbox *bb) {
   // printf("trying to parse vertex: %s\n", *ptr);
 
   for (int i = 0; i < 3; ++i) {
@@ -71,6 +73,15 @@ bool parse_vertex(char **ptr, GLfloat **vertices) {
     // printf("rest: %s\n", new_ptr);
     *ptr = new_ptr;
     array_push(*vertices, coord);
+
+    // update bbox
+    // bb->raw is [x_min, x_max, y_min, y_max, z_min, z_max]
+    // i = 0 is x, i = 1 is y, i = 2 is z
+    if (coord < bb->raw[(ptrdiff_t)i * 2]) {
+      bb->raw[i] = coord;
+    } else if (coord > bb->raw[i * 2 + 1]) {
+      bb->raw[i * 2 + 1] = coord;
+    }
   }
 
   return true;
@@ -126,10 +137,12 @@ bool parse_obj(const char *file_path, t_object *obj) {
   FILE *file = fopen(file_path, "rb");
   char buffer[MAX_LINE_LEN];
   size_t lines_read = 0;
+
   array_clean(obj->vertices);
   array_clean(obj->indices);
   obj->vertices = NULL;
   obj->indices = NULL;
+  obj->bbox = (t_bbox){0};
 
   if (!file) {
     perror("fopen");
@@ -158,7 +171,7 @@ bool parse_obj(const char *file_path, t_object *obj) {
     ptr = skip_whitespace(ptr);
     if (starts_with("v ", ptr) || starts_with("v\t", ptr)) {
       ptr += 2;
-      if (!parse_vertex(&ptr, &obj->vertices)) {
+      if (!parse_vertex(&ptr, &obj->vertices, &obj->bbox)) {
         // TODO fail function
         (void)fprintf(stderr, ".obj file error on line %zd\n", lines_read + 1);
         (void)fclose(file);
