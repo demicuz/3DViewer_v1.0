@@ -71,7 +71,7 @@ void render_ui(t_app *app, t_object *obj) {
   ImVec2 buttonSize = {.x = 0, .y = 0};
   if (igButton("Load .obj file", buttonSize)) {
     nfdchar_t *outPath = NULL;
-    nfdresult_t result = NFD_OpenDialog(NULL, NULL, &outPath);
+    nfdresult_t result = NFD_OpenDialog("obj", NULL, &outPath);
 
     if (result == NFD_OKAY) {
         puts("Success!");
