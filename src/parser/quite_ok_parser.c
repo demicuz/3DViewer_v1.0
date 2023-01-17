@@ -138,10 +138,8 @@ bool parse_obj(const char *file_path, t_object *obj) {
   char buffer[MAX_LINE_LEN];
   size_t lines_read = 0;
 
-  array_clean(obj->vertices);
-  array_clean(obj->indices);
-  obj->vertices = NULL;
-  obj->indices = NULL;
+  array_reset_size(obj->vertices);
+  array_reset_size(obj->indices);
   obj->bbox = (t_bbox){0};
 
   if (!file) {
