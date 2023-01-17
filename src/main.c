@@ -194,6 +194,8 @@ int main(void) {
   glDeleteProgram(shaderProgram);
 
   ui_cleanup();
+  array_clean(app.vertices);
+  array_clean(app.lines);
   // Terminates GLFW, clearing any resources allocated by GLFW.
   glfwTerminate();
   exit(0);
