@@ -158,14 +158,14 @@ int main(void) {
       update_mvp(&obj);
       window_was_resized = false;
     } else if (app.model_was_updated) {
-      printf("vertices: %d\n", array_size(app.vertices) / 3);
+      printf("vertices: %d\n", array_size(obj.vertices) / 3);
       glBindBuffer(GL_ARRAY_BUFFER, VBO);
-      glBufferData(GL_ARRAY_BUFFER, array_size(app.vertices) * sizeof(GLfloat), app.vertices,
+      glBufferData(GL_ARRAY_BUFFER, array_size(obj.vertices) * sizeof(GLfloat), obj.vertices,
                    GL_STATIC_DRAW);
 
-      printf("indices: %d\n", array_size(app.lines) / 2);
+      printf("indices: %d\n", array_size(obj.indices) / 2);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, array_size(app.lines) * sizeof(GLuint), app.lines,
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, array_size(obj.indices) * sizeof(GLuint), obj.indices,
                    GL_STATIC_DRAW);
       app.model_was_updated = false;
     }
@@ -174,7 +174,7 @@ int main(void) {
     // Draw
     glClearColor(app.bg_col.x, app.bg_col.y, app.bg_col.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawElements(GL_LINES, array_size(app.lines), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINES, array_size(obj.indices), GL_UNSIGNED_INT, 0);
     // glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
                    // 0);
     // glMultiDrawElements(GL_LINE_LOOP, cube_counts, GL_UNSIGNED_INT, (const
@@ -194,8 +194,8 @@ int main(void) {
   glDeleteProgram(shaderProgram);
 
   ui_cleanup();
-  array_clean(app.vertices);
-  array_clean(app.lines);
+  array_clean(obj.vertices);
+  array_clean(obj.indices);
   // Terminates GLFW, clearing any resources allocated by GLFW.
   glfwTerminate();
   exit(0);

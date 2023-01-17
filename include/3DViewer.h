@@ -23,6 +23,8 @@
 
 typedef struct {
   t_bbox bbox;
+  GLfloat *vertices;
+  GLuint *indices;
 
   t_mat4 model;
   t_mat4 view;
@@ -42,8 +44,6 @@ typedef struct {
   t_vec3 bg_col;
   t_object *obj;
   ImGuiIO *ioptr;
-  GLfloat *vertices;
-  GLuint *lines;
   bool model_was_updated;
 } t_app;
 
@@ -54,6 +54,6 @@ void draw_ui(void);
 void ui_cleanup(void);
 
 // quite_ok_parser
-bool parse_obj(const char *file_path, GLfloat **vertices, GLuint **indices);
+bool parse_obj(const char *file_path, t_object *obj);
 
 #endif

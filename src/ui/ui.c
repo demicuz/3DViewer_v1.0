@@ -76,7 +76,7 @@ void render_ui(t_app *app, t_object *obj) {
     if (result == NFD_OKAY) {
         puts("Success!");
         puts(outPath);
-        if (parse_obj(outPath, &app->vertices, &app->lines)) {
+        if (parse_obj(outPath, obj)) {
           app->model_was_updated = true;
         }
         free(outPath);

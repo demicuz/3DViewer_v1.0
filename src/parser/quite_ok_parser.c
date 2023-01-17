@@ -1,3 +1,4 @@
+#include "3DViewer.h"
 #include "dynamic-array.h"
 
 #include <stdio.h>
@@ -121,14 +122,14 @@ bool parse_face(char **ptr, GLuint **lines) {
   return true;
 }
 
-bool parse_obj(const char *file_path, GLfloat **vertices, GLuint **lines) {
+bool parse_obj(const char *file_path, t_object *obj) {
   FILE *file = fopen(file_path, "rb");
   char buffer[MAX_LINE_LEN];
   size_t lines_read = 0;
-  array_clean(*vertices);
-  array_clean(*lines);
-  *vertices = NULL;
-  *lines = NULL;
+  array_clean(obj->vertices);
+  array_clean(obj->indices);
+  obj->vertices = NULL;
+  obj->indices = NULL;
 
   if (!file) {
     perror("fopen");
@@ -136,9 +137,9 @@ bool parse_obj(const char *file_path, GLfloat **vertices, GLuint **lines) {
   }
 
   // A dummy vertex to not offset all the indices from .obj
-  array_push(*vertices, 0);
-  array_push(*vertices, 0);
-  array_push(*vertices, 0);
+  array_push(obj->vertices, 0);
+  array_push(obj->vertices, 0);
+  array_push(obj->vertices, 0);
 
   errno = 0;
   while (fgets(buffer, MAX_LINE_LEN, file)) {
@@ -157,7 +158,7 @@ bool parse_obj(const char *file_path, GLfloat **vertices, GLuint **lines) {
     ptr = skip_whitespace(ptr);
     if (starts_with("v ", ptr) || starts_with("v\t", ptr)) {
       ptr += 2;
-      if (!parse_vertex(&ptr, vertices)) {
+      if (!parse_vertex(&ptr, &obj->vertices)) {
         // TODO fail function
         (void)fprintf(stderr, ".obj file error on line %zd\n", lines_read + 1);
         (void)fclose(file);
@@ -165,7 +166,7 @@ bool parse_obj(const char *file_path, GLfloat **vertices, GLuint **lines) {
       }
     } else if (starts_with("f ", ptr) || starts_with("f\t", ptr)) {
       ptr += 2;
-      if (!parse_face(&ptr, lines)) {
+      if (!parse_face(&ptr, &obj->indices)) {
         // TODO fail function
         (void)fprintf(stderr, ".obj file error on line %zd\n", lines_read + 1);
         (void)fclose(file);
