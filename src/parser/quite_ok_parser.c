@@ -78,7 +78,7 @@ bool parse_vertex(char **ptr, GLfloat **vertices, t_bbox *bb) {
     // bb->raw is [x_min, x_max, y_min, y_max, z_min, z_max]
     // i = 0 is x, i = 1 is y, i = 2 is z
     if (coord < bb->raw[(ptrdiff_t)i * 2]) {
-      bb->raw[i] = coord;
+      bb->raw[(ptrdiff_t)i * 2] = coord;
     } else if (coord > bb->raw[i * 2 + 1]) {
       bb->raw[i * 2 + 1] = coord;
     }
