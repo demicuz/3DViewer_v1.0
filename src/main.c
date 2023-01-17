@@ -1,6 +1,7 @@
 #include "3DViewer.h"
 #include "gl-wrapper.h"
 #include "vector.h"
+#include "dynamic-array.h"
 
 #define GLFW_INCLUDE_NONE
 #include <glad/gl.h>
@@ -139,7 +140,7 @@ int main(void) {
   obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
 
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  glLineWidth(3.0f);
+  // glLineWidth(3.0f);
 
   while (!glfwWindowShouldClose(window)) {
     // TODO probably should update OpenGL state after GUI messes around with it
@@ -156,14 +157,26 @@ int main(void) {
       mat4_perspective(FOV, aspect, 0.1f, 1e5f, &obj.proj);
       update_mvp(&obj);
       window_was_resized = false;
+    } else if (app.model_was_updated) {
+      printf("vertices: %d\n", array_size(app.vertices) / 3);
+      glBindBuffer(GL_ARRAY_BUFFER, VBO);
+      glBufferData(GL_ARRAY_BUFFER, array_size(app.vertices) * sizeof(GLfloat), app.vertices,
+                   GL_STATIC_DRAW);
+
+      printf("indices: %d\n", array_size(app.lines) / 2);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, array_size(app.lines) * sizeof(GLuint), app.lines,
+                   GL_STATIC_DRAW);
+      app.model_was_updated = false;
     }
     // TODO update_proj_mat(&obj) in case we're gonna change FOV
 
     // Draw
     glClearColor(app.bg_col.x, app.bg_col.y, app.bg_col.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
-                   0);
+    glDrawElements(GL_LINES, array_size(app.lines), GL_UNSIGNED_INT, 0);
+    // glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
+                   // 0);
     // glMultiDrawElements(GL_LINE_LOOP, cube_counts, GL_UNSIGNED_INT, (const
     // void **) cube_indices, sizeof cube_counts / sizeof (GLsizei));
     draw_ui();

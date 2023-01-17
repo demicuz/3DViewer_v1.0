@@ -42,6 +42,9 @@ typedef struct {
   t_vec3 bg_col;
   t_object *obj;
   ImGuiIO *ioptr;
+  GLfloat *vertices;
+  GLuint *lines;
+  bool model_was_updated;
 } t_app;
 
 // ui
@@ -49,5 +52,8 @@ void init_ui(GLFWwindow *window, t_app *app);
 void render_ui(t_app *app, t_object *obj);
 void draw_ui(void);
 void ui_cleanup(void);
+
+// quite_ok_parser
+bool parse_obj(const char *file_path, GLfloat **vertices, GLuint **indices);
 
 #endif

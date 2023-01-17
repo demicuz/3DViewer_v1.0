@@ -76,13 +76,16 @@ void render_ui(t_app *app, t_object *obj) {
     if (result == NFD_OKAY) {
         puts("Success!");
         puts(outPath);
+        if (parse_obj(outPath, &app->vertices, &app->lines)) {
+          app->model_was_updated = true;
+        }
         free(outPath);
     }
     else if (result == NFD_CANCEL) {
         puts("User pressed cancel.");
     }
     else {
-        printf("Error: %s\n", NFD_GetError());
+        (void)fprintf(stderr, "Error: %s\n", NFD_GetError());
     }
   }
 
