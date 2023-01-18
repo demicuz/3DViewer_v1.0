@@ -38,14 +38,21 @@ bool init_obj(t_object *obj) {
 void update_view_mat(t_object *obj) {
   mat4_set_identity(&obj->view);
 
-  mat4_translateZ(&obj->view, -CAMERA_DISTANCE);
+  mat4_scale_float(&obj->view, obj->scale, NULL);
+
+  mat4_translateZ(&obj->view, -CAMERA_DISTANCE/obj->scale);
   mat4_translate(&obj->view, &obj->translation, NULL);
 
   mat4_rotateX(&obj->view, obj->rotation.x, NULL);
   mat4_rotateY(&obj->view, obj->rotation.y, NULL);
   mat4_rotateZ(&obj->view, obj->rotation.z, NULL);
 
-  mat4_scale_float(&obj->view, obj->scale, NULL);
+  // mat4_scale_float(&obj->view, obj->scale, NULL);
+
+  #ifdef DEBUG_PRINT
+  puts("View mat:");
+  print_mat4(&obj->view);
+  #endif
 }
 
 void update_mvp(t_object *obj) {
@@ -167,6 +174,17 @@ int main(void) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, array_size(obj.indices) * sizeof(GLuint), obj.indices,
                    GL_STATIC_DRAW);
+
+      #ifdef DEBUG_PRINT
+      printf("bounding box:\n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n",
+        obj.bbox.x_min, obj.bbox.x_max,
+        obj.bbox.y_min, obj.bbox.y_max,
+        obj.bbox.z_min, obj.bbox.z_max);
+      #endif
+
+      mat4_set_identity(&obj.model);
+      mat4_unit_box(&obj.bbox, &obj.model);
+      update_mvp(&obj);
       app.model_was_updated = false;
     }
     // TODO update_proj_mat(&obj) in case we're gonna change FOV

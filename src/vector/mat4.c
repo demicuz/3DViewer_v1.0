@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include <math.h>
+#include <stdio.h>
 
 t_mat4 mat4_create_identity(void) {
   t_mat4 result = {{0.0f}};
@@ -482,16 +483,28 @@ t_mat4 *mat4_lookAt(t_vec3 *eye, t_vec3 *center, t_vec3 *up, t_mat4 *dest) {
 }
 
 t_mat4 *mat4_unit_box(t_bbox *bbox, t_mat4 *dest) {
-  t_vec3 translation =
-      vec3((bbox->x_min + bbox->x_max) / 2, (bbox->y_min + bbox->y_max) / 2,
-           (bbox->z_min + bbox->z_max) / 2);
-  mat4_translate(dest, &translation, NULL);
-
   float x_span = bbox->x_max - bbox->x_min;
   float y_span = bbox->y_max - bbox->y_min;
   float z_span = bbox->z_max - bbox->z_min;
   float max_span = fmaxf(fmaxf(x_span, y_span), z_span);
+
+  t_vec3 translation =
+      vec3(-(bbox->x_min + bbox->x_max) / 2, -(bbox->y_min + bbox->y_max) / 2,
+           -(bbox->z_min + bbox->z_max) / 2);
+
   mat4_scale_float(dest, 1.0f / max_span, NULL);
+  mat4_translate(dest, &translation, NULL);
 
   return dest;
 }
+
+void print_mat4(const t_mat4 *m) {
+  printf("%.2f %.2f %.2f %.2f\n"
+         "%.2f %.2f %.2f %.2f\n"
+         "%.2f %.2f %.2f %.2f\n"
+         "%.2f %.2f %.2f %.2f\n",
+         m->raw[0], m->raw[4], m->raw[8], m->raw[12], m->raw[1], m->raw[5],
+         m->raw[9], m->raw[13], m->raw[2], m->raw[6], m->raw[10], m->raw[14],
+         m->raw[3], m->raw[7], m->raw[11], m->raw[15]);
+}
+

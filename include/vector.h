@@ -58,6 +58,8 @@ t_mat4 *mat4_perspective(float fovy, float aspect, float near, float far,
 t_mat4 *mat4_lookAt(t_vec3 *eye, t_vec3 *center, t_vec3 *up, t_mat4 *dest);
 t_mat4 *mat4_unit_box(t_bbox *bbox, t_mat4 *dest);
 
+void print_mat4(const t_mat4 *m);
+
 // t_vec3   vec3(float x, float y, float z);
 // t_vec3   v_add(t_vec3 a, t_vec3 b);
 // t_vec3   v_sub(t_vec3 a, t_vec3 b);
