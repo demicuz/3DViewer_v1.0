@@ -21,6 +21,8 @@
 #define CAMERA_DISTANCE 2
 #define FOV 40
 
+#define MAX_LINE_LEN 65536
+
 typedef struct {
   t_bbox bbox;
   GLfloat *vertices;
@@ -46,6 +48,11 @@ typedef struct {
   ImGuiIO *ioptr;
   bool model_was_updated;
 } t_app;
+
+typedef struct {
+  char *cursor;
+  size_t lines_read;
+} t_parser;
 
 // ui
 void init_ui(GLFWwindow *window, t_app *app);

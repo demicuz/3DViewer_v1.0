@@ -18,13 +18,6 @@ bool init_obj(t_object *obj) {
   obj->view_was_updated = true;
 
   mat4_set_identity(&obj->model);
-
-  obj->bbox = (t_bbox){.x_min = -1,
-                       .x_max = 1,
-                       .y_min = -1,
-                       .y_max = 1,
-                       .z_min = -1,
-                       .z_max = 1};
   mat4_unit_box(&obj->bbox, &obj->model);
 
   mat4_set_identity(&obj->view);
@@ -146,14 +139,9 @@ int main(void) {
   init_obj(&obj);
   obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
 
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   // glLineWidth(3.0f);
 
   while (!glfwWindowShouldClose(window)) {
-    // TODO probably should update OpenGL state after GUI messes around with it
-    // glUseProgram(shaderProgram);
-    // glBindVertexArray(VAO);
-
     render_ui(&app, &obj);
     // If obj state was changed with UI, update MVP
     if (obj.view_was_updated) {
@@ -193,10 +181,7 @@ int main(void) {
     glClearColor(app.bg_col.x, app.bg_col.y, app.bg_col.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_LINES, array_size(obj.indices), GL_UNSIGNED_INT, 0);
-    // glDrawElements(GL_LINES, sizeof indices / sizeof(GLuint), GL_UNSIGNED_INT,
-                   // 0);
-    // glMultiDrawElements(GL_LINE_LOOP, cube_counts, GL_UNSIGNED_INT, (const
-    // void **) cube_indices, sizeof cube_counts / sizeof (GLsizei));
+
     draw_ui();
 
     // Swap the screen buffers
@@ -214,7 +199,7 @@ int main(void) {
   ui_cleanup();
   array_clean(obj.vertices);
   array_clean(obj.indices);
-  // Terminates GLFW, clearing any resources allocated by GLFW.
+
   glfwTerminate();
   exit(0);
 }

@@ -11,8 +11,6 @@
 #include <glad/gl.h>
 #include <errno.h>
 
-#define MAX_LINE_LEN 65536
-
 void *array_realloc(void *ptr, unsigned int n, size_t elem_size) {
   unsigned int sz = array_size(ptr);
   unsigned int nsz = sz + n;
@@ -90,6 +88,7 @@ bool parse_vertex(char **ptr, GLfloat **vertices, t_bbox *bb) {
 // TODO GLuint boundary check
 // TODO face is defined by at least 3 indices
 // TODO handle `/` characters
+// TODO relative indices
 bool parse_face(char **ptr, GLuint **lines) {
   // printf("trying to parse face: %s\n", *ptr);
   char *new_ptr;
@@ -133,64 +132,71 @@ bool parse_face(char **ptr, GLuint **lines) {
   return true;
 }
 
+bool parse_line(t_parser *p, t_object *obj) {
+  p->cursor = skip_whitespace(p->cursor);
+
+  if (starts_with("v ", p->cursor) || starts_with("v\t", p->cursor)) {
+    p->cursor += 2;
+    if (!parse_vertex(&p->cursor, &obj->vertices, &obj->bbox)) {
+      return false;
+    }
+  } else if (starts_with("f ", p->cursor) || starts_with("f\t", p->cursor)) {
+    p->cursor += 2;
+    if (!parse_face(&p->cursor, &obj->indices)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool read_error(FILE *file, char buffer[], t_parser *p) {
+  if (ferror(file)) {
+    (void)fprintf(stderr, "IO error while reading file\n");
+    return true;
+  }
+
+  if (strlen(buffer) == MAX_LINE_LEN - 1) {
+    (void)fprintf(stderr, ".obj file: line %zd is too long!\n", p->lines_read + 1);
+    return true;
+  }
+
+  return false;
+}
+
 bool parse_obj(const char *file_path, t_object *obj) {
   FILE *file = fopen(file_path, "rb");
-  char buffer[MAX_LINE_LEN];
-  size_t lines_read = 0;
-
-  array_reset_size(obj->vertices);
-  array_reset_size(obj->indices);
-  obj->bbox = (t_bbox){0};
-
   if (!file) {
     perror("fopen");
     return false;
   }
+
+  t_parser p = {0};
+  char buffer[MAX_LINE_LEN];
+
+  array_reset_size(obj->vertices);
+  array_reset_size(obj->indices);
+  obj->bbox = (t_bbox){0};
 
   // A dummy vertex to not offset all the indices from .obj
   array_push(obj->vertices, 0);
   array_push(obj->vertices, 0);
   array_push(obj->vertices, 0);
 
-  errno = 0;
   while (fgets(buffer, MAX_LINE_LEN, file)) {
-    if (ferror(file)) {
+    if (read_error(file, buffer, &p)) {
       (void)fclose(file);
       return false;
     }
-    if (strlen(buffer) == MAX_LINE_LEN - 1) {
-      (void)fprintf(stderr, ".obj file: line %zd is too long!\n", lines_read + 1);
+
+    p.cursor = buffer;
+    if (!parse_line(&p, obj)) {
+      (void)fprintf(stderr, ".obj file error on line %zd\n", p.lines_read + 1);
       (void)fclose(file);
       return false;
     }
-    // printf("line read: %s\n", buffer);
-    char *ptr = buffer;
 
-    ptr = skip_whitespace(ptr);
-    if (starts_with("v ", ptr) || starts_with("v\t", ptr)) {
-      ptr += 2;
-      if (!parse_vertex(&ptr, &obj->vertices, &obj->bbox)) {
-        // TODO fail function
-        (void)fprintf(stderr, ".obj file error on line %zd\n", lines_read + 1);
-        (void)fclose(file);
-        return false;
-      }
-    } else if (starts_with("f ", ptr) || starts_with("f\t", ptr)) {
-      ptr += 2;
-      if (!parse_face(&ptr, &obj->indices)) {
-        // TODO fail function
-        (void)fprintf(stderr, ".obj file error on line %zd\n", lines_read + 1);
-        (void)fclose(file);
-        return false;
-      }
-    }
-    lines_read++;
-  }
-
-  if (errno) {
-    perror("getline");
-    (void)fclose(file);
-    return false;
+    p.lines_read++;
   }
 
   (void)fclose(file);
