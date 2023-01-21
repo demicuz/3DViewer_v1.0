@@ -51,25 +51,28 @@ char *skip_whitespace(char *s) {
   return s;
 }
 
-bool parse_vertex(char **ptr, GLfloat **vertices, t_bbox *bb) {
-  // printf("trying to parse vertex: %s\n", *ptr);
+void print_error(const char *error, t_parser *p) {
+  (void)fprintf(stderr, "%s:%zd: error: %s\n", p->basename, p->lines_read + 1,
+                error);
+}
 
+bool parse_vertex(t_parser *p, GLfloat **vertices, t_bbox *bb) {
   for (int i = 0; i < 3; ++i) {
-    *ptr = skip_whitespace(*ptr);
+    p->cursor = skip_whitespace(p->cursor);
+
     char *new_ptr;
     errno = 0;
-    GLfloat coord = strtof(*ptr, &new_ptr);
+    GLfloat coord = strtof(p->cursor, &new_ptr);
     if (errno != 0) {
-      perror("strtof");
+      print_error(strerror(errno), p);
       return false;
     }
-    if (*ptr == new_ptr) {
-      (void)fprintf(stderr, "Error: missing vertex coordinates\n");
+    if (p->cursor == new_ptr) {
+      print_error("missing vertex coordinates", p);
       return false;
     }
-    // printf("parsed: %f\n", coord);
-    // printf("rest: %s\n", new_ptr);
-    *ptr = new_ptr;
+    p->cursor = new_ptr;
+
     array_push(*vertices, coord);
 
     // update bbox
@@ -85,48 +88,47 @@ bool parse_vertex(char **ptr, GLfloat **vertices, t_bbox *bb) {
   return true;
 }
 
+bool parse_index(t_parser *p, GLuint *result) {
+  char *new_ptr;
+  errno = 0;
+  *result = strtoul(p->cursor, &new_ptr, 10);
+  if (errno != 0) {
+    print_error(strerror(errno), p);
+    return false;
+  }
+  if (p->cursor == new_ptr) {
+    print_error("missing face index", p);
+    return false;
+  }
+  p->cursor = new_ptr;
+
+  return true;
+}
+
 // TODO GLuint boundary check
 // TODO face is defined by at least 3 indices
 // TODO handle `/` characters
 // TODO relative indices
-bool parse_face(char **ptr, GLuint **lines) {
-  // printf("trying to parse face: %s\n", *ptr);
-  char *new_ptr;
-  errno = 0;
-  GLuint first_i = strtoul(*ptr, &new_ptr, 10);
-  if (errno != 0) {
-    perror("strtol");
+bool parse_face(t_parser *p, GLuint **lines) {
+  GLuint first_i;
+  if (!parse_index(p, &first_i)) {
     return false;
   }
-  if (*ptr == new_ptr) {
-    (void)fprintf(stderr, "Error: missing face index\n");
-    return false;
-  }
-  // printf("parsed: %d\n", first_i);
-  // printf("rest: %s\n", new_ptr);
-  *ptr = new_ptr;
-  array_push(*lines, first_i);
-  *ptr = skip_whitespace(*ptr);
+  p->cursor = skip_whitespace(p->cursor);
 
-  while (**ptr) {
-    // char *new_ptr;
-    errno = 0;
-    GLuint i = strtoul(*ptr, &new_ptr, 10);
-    if (errno != 0) {
-      perror("strtol");
+  array_push(*lines, first_i);
+
+  while (*p->cursor) {
+    GLuint i;
+    if (!parse_index(p, &i)) {
       return false;
     }
-    if (*ptr == new_ptr) {
-      (void)fprintf(stderr, "Error: missing face index\n");
-      return false;
-    }
-    // printf("parsed: %d\n", i);
-    // printf("rest: %s\n", new_ptr);
-    *ptr = new_ptr;
+    p->cursor = skip_whitespace(p->cursor);
+
     array_push(*lines, i);
     array_push(*lines, i);
-    *ptr = skip_whitespace(*ptr);
   }
+
   array_push(*lines, first_i);
 
   return true;
@@ -137,12 +139,12 @@ bool parse_line(t_parser *p, t_object *obj) {
 
   if (starts_with("v ", p->cursor) || starts_with("v\t", p->cursor)) {
     p->cursor += 2;
-    if (!parse_vertex(&p->cursor, &obj->vertices, &obj->bbox)) {
+    if (!parse_vertex(p, &obj->vertices, &obj->bbox)) {
       return false;
     }
   } else if (starts_with("f ", p->cursor) || starts_with("f\t", p->cursor)) {
     p->cursor += 2;
-    if (!parse_face(&p->cursor, &obj->indices)) {
+    if (!parse_face(p, &obj->indices)) {
       return false;
     }
   }
@@ -152,20 +154,20 @@ bool parse_line(t_parser *p, t_object *obj) {
 
 bool read_error(FILE *file, char buffer[], t_parser *p) {
   if (ferror(file)) {
-    (void)fprintf(stderr, "IO error while reading file\n");
+    print_error("IO corruption while reading file", p);
     return true;
   }
 
   if (strlen(buffer) == MAX_LINE_LEN - 1) {
-    (void)fprintf(stderr, ".obj file: line %zd is too long!\n", p->lines_read + 1);
+    print_error("line is too long!", p);
     return true;
   }
 
   return false;
 }
 
-bool parse_obj(const char *file_path, t_object *obj) {
-  FILE *file = fopen(file_path, "rb");
+bool parse_obj(const char *filepath, t_object *obj) {
+  FILE *file = fopen(filepath, "rb");
   if (!file) {
     perror("fopen");
     return false;
@@ -173,6 +175,7 @@ bool parse_obj(const char *file_path, t_object *obj) {
 
   t_parser p = {0};
   char buffer[MAX_LINE_LEN];
+  p.basename = strrchr(filepath, '/') + 1;
 
   array_reset_size(obj->vertices);
   array_reset_size(obj->indices);
@@ -191,7 +194,6 @@ bool parse_obj(const char *file_path, t_object *obj) {
 
     p.cursor = buffer;
     if (!parse_line(&p, obj)) {
-      (void)fprintf(stderr, ".obj file error on line %zd\n", p.lines_read + 1);
       (void)fclose(file);
       return false;
     }

@@ -23,6 +23,8 @@
 
 #define MAX_LINE_LEN 65536
 
+#define DEBUG_PRINT
+
 typedef struct {
   t_bbox bbox;
   GLfloat *vertices;
@@ -50,6 +52,7 @@ typedef struct {
 } t_app;
 
 typedef struct {
+  char *basename;
   char *cursor;
   size_t lines_read;
 } t_parser;
@@ -61,6 +64,6 @@ void draw_ui(void);
 void ui_cleanup(void);
 
 // quite_ok_parser
-bool parse_obj(const char *file_path, t_object *obj);
+bool parse_obj(const char *filepath, t_object *obj);
 
 #endif
