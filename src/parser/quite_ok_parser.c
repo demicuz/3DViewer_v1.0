@@ -51,6 +51,27 @@ char *skip_whitespace(char *s) {
   return s;
 }
 
+char *skip_digits(char *s) {
+  while (*s >= '0' && *s <= '9') {
+    s++;
+  }
+
+  return s;
+}
+
+char *skip_texture_and_normals(char *s) {
+  if (*s == '/') {
+    s++;
+  }
+  s = skip_digits(s);
+  if (*s == '/') {
+    s++;
+  }
+  s = skip_digits(s);
+
+  return s;
+}
+
 void print_error(const char *error, t_parser *p) {
   (void)fprintf(stderr, "%s:%zd: error: %s\n", p->basename, p->lines_read + 1,
                 error);
@@ -58,8 +79,6 @@ void print_error(const char *error, t_parser *p) {
 
 bool parse_vertex(t_parser *p, GLfloat **vertices, t_bbox *bb) {
   for (int i = 0; i < 3; ++i) {
-    p->cursor = skip_whitespace(p->cursor);
-
     char *new_ptr;
     errno = 0;
     GLfloat coord = strtof(p->cursor, &new_ptr);
@@ -97,10 +116,10 @@ bool parse_index(t_parser *p, GLuint *result) {
     return false;
   }
   if (p->cursor == new_ptr) {
-    print_error("missing face index", p);
     return false;
   }
-  p->cursor = new_ptr;
+
+  p->cursor = skip_texture_and_normals(new_ptr);
 
   return true;
 }
@@ -112,19 +131,14 @@ bool parse_index(t_parser *p, GLuint *result) {
 bool parse_face(t_parser *p, GLuint **lines) {
   GLuint first_i;
   if (!parse_index(p, &first_i)) {
+    print_error("no vertex indices", p);
     return false;
   }
-  p->cursor = skip_whitespace(p->cursor);
 
   array_push(*lines, first_i);
 
-  while (*p->cursor) {
-    GLuint i;
-    if (!parse_index(p, &i)) {
-      return false;
-    }
-    p->cursor = skip_whitespace(p->cursor);
-
+  GLuint i;
+  while (parse_index(p, &i)) {
     array_push(*lines, i);
     array_push(*lines, i);
   }
