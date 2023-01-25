@@ -126,7 +126,6 @@ bool parse_index(t_parser *p, GLuint *result) {
 
 // TODO GLuint boundary check
 // TODO face is defined by at least 3 indices
-// TODO handle `/` characters
 // TODO relative indices
 bool parse_face(t_parser *p, GLuint **lines) {
   GLuint first_i;
@@ -192,7 +191,9 @@ bool parse_obj(const char *filepath, t_object *obj) {
   p.basename = strrchr(filepath, '/') + 1;
 
   array_reset_size(obj->vertices);
+  obj->vertex_count = 0;
   array_reset_size(obj->indices);
+  obj->edge_count = 0;
   obj->bbox = (t_bbox){0};
 
   // A dummy vertex to not offset all the indices from .obj
@@ -214,6 +215,13 @@ bool parse_obj(const char *filepath, t_object *obj) {
 
     p.lines_read++;
   }
+
+  obj->vertex_count = array_size(obj->vertices) / 3 - 1;
+  // TODO: Count true number of edges.
+  // Currently, this is just a hack. We're assuming that every edge belongs
+  // exactly to two faces. So we're dividing by 2 to get true line count that
+  // we're gonna draw, and then again by 2 to get "edge count".
+  obj->edge_count = array_size(obj->indices) / 4;
 
   (void)fclose(file);
   return true;

@@ -153,7 +153,7 @@ int main(void) {
       update_mvp(&obj);
       window_was_resized = false;
     } else if (app.model_was_updated) {
-      printf("vertices: %d\n", array_size(obj.vertices) / 3);
+      printf("vertices: %d\n", obj.vertex_count);
       glBindBuffer(GL_ARRAY_BUFFER, VBO);
       glBufferData(GL_ARRAY_BUFFER, array_size(obj.vertices) * sizeof(GLfloat), obj.vertices,
                    GL_STATIC_DRAW);

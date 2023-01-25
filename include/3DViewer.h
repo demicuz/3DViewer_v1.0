@@ -23,12 +23,14 @@
 
 #define MAX_LINE_LEN 65536
 
-#define DEBUG_PRINT
+// #define DEBUG_PRINT
 
 typedef struct {
   t_bbox bbox;
   GLfloat *vertices;
   GLuint *indices;
+  unsigned int vertex_count;
+  unsigned int edge_count;
 
   t_mat4 model;
   t_mat4 view;
@@ -43,12 +45,15 @@ typedef struct {
   bool view_was_updated;
 } t_object;
 
-// TODO may be obsolete
 typedef struct {
   t_vec3 bg_col;
   t_object *obj;
+  char filepath[4096];
+  char *basename;
   ImGuiIO *ioptr;
+  // float fov;
   bool model_was_updated;
+  bool parse_error;
 } t_app;
 
 typedef struct {

@@ -9,6 +9,7 @@
 #include <nfd.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef IMGUI_HAS_IMSTR
 #define igBegin igBegin_Str
@@ -56,6 +57,31 @@ void init_ui(GLFWwindow *window, t_app *app) {
   ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
+void load_file(t_app *app, t_object *obj) {
+  nfdchar_t *outPath = NULL;
+  nfdresult_t result = NFD_OpenDialog("obj", "./models", &outPath);
+
+  if (result == NFD_OKAY) {
+      strcpy(app->filepath, outPath);
+      free(outPath);
+      puts(app->filepath);
+      app->basename = strrchr(app->filepath, '/') + 1;
+
+      if (parse_obj(app->filepath, obj)) {
+        app->parse_error = false;
+        app->model_was_updated = true;
+      } else {
+        app->parse_error = true;
+      }
+  }
+  else if (result == NFD_CANCEL) {
+      puts("User pressed cancel.");
+  }
+  else {
+      (void)fprintf(stderr, "Error: %s\n", NFD_GetError());
+  }
+}
+
 void render_ui(t_app *app, t_object *obj) {
 	// TODO does this have an overhead?
 	ImGui_ImplOpenGL3_NewFrame();
@@ -70,21 +96,17 @@ void render_ui(t_app *app, t_object *obj) {
   igDummy((ImVec2) {.x = 0, .y = 3});
   ImVec2 buttonSize = {.x = 0, .y = 0};
   if (igButton("Load .obj file", buttonSize)) {
-    nfdchar_t *outPath = NULL;
-    nfdresult_t result = NFD_OpenDialog("obj", "./models", &outPath);
+    load_file(app, obj);
+  }
 
-    if (result == NFD_OKAY) {
-        puts(outPath);
-        if (parse_obj(outPath, obj)) {
-          app->model_was_updated = true;
-        }
-        free(outPath);
-    }
-    else if (result == NFD_CANCEL) {
-        puts("User pressed cancel.");
-    }
-    else {
-        (void)fprintf(stderr, "Error: %s\n", NFD_GetError());
+  if (*app->filepath) {
+    igDummy((ImVec2) {.x = 0, .y = 5});
+    igText(app->basename);
+    if (!app->parse_error) {
+      igText("Vertices: %d", obj->vertex_count);
+      igText("Edges: %d", obj->edge_count);
+    } else {
+      igTextColored((ImVec4){1, 0, 0, 1}, "Parse error!");
     }
   }
 
