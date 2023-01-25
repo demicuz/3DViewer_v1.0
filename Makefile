@@ -2,6 +2,7 @@ NAME		:= 3DViewer
 
 SRC_DIR		:= src
 LIB_DIR		:= lib
+TEST_DIR	:= test
 
 CIMGUI_DIR	:= cimgui
 LIBCIMGUI	:= $(LIB_DIR)/libcimgui.a
@@ -11,6 +12,10 @@ LIBNFD		:= $(LIB_DIR)/libnfd.a
 
 SRC			:= $(wildcard $(SRC_DIR)/*.c $(SRC_DIR)/*/*.c)
 OBJ			:= $(SRC:.c=.o)
+
+TEST_SRC	:= $(wildcard $(TEST_DIR)/*.c $(SRC_DIR)/*/*.c)
+TEST_OBJ	:= $(TEST_SRC:.c=.o)
+TEST_EXEC	:= run_tests
 
 # TODO set correct flags
 CC			:= gcc -fdiagnostics-color=always
@@ -60,16 +65,26 @@ $(LIB_DIR):
 	mkdir -p $@
 
 clean:
-	rm -vf $(OBJ)
-	rm -vf $(OBJ:.o=.d)
+	@rm -vf $(OBJ)
+	@rm -vf $(OBJ:.o=.d)
+	@rm -vf $(wildcard $(TEST_DIR)/*.o $(TEST_DIR)/*.d)
 	$(MAKE) clean --directory=$(CIMGUI_DIR)
 	$(MAKE) clean --directory=$(NFD_MAKE)
 
 fclean: clean
-	rm -vf $(NAME)
-	rm -rvf $(LIB_DIR)
+	@rm -vf $(NAME)
+	@rm -vf $(TEST_EXEC)
+	@rm -rvf $(LIB_DIR)
 	$(MAKE) fclean --directory=$(CIMGUI_DIR)
 
 re: fclean all
+
+tests: $(TEST_EXEC)
+	@echo "------------------"
+	@./$(TEST_EXEC)
+	@echo "------------------"
+
+$(TEST_EXEC): $(TEST_OBJ) $(LIBCIMGUI) $(LIBNFD)
+	$(CC) $(LDFLAGS) $(TEST_OBJ) $(LDLIBS) -lcheck -o $(TEST_EXEC)
 
 -include $(OBJ:.o=.d)
