@@ -74,10 +74,11 @@ bool create_line_shader_program(GLuint *program) {
 
   const char *fragmentShaderSource =
       "#version 330 core\n"
+      "uniform vec3 line_col;\n"
       "out vec4 FragColor;\n"
       "void main()\n"
       "{\n"
-      "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+      "    FragColor = vec4(line_col, 1.0f);\n"
       "}\0";  // TODO aren't they null-terminated by default?
 
   GLuint vertexShader;

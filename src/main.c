@@ -134,10 +134,12 @@ int main(void) {
   glUseProgram(shaderProgram);
 
   app.bg_col = (t_vec3){{0.2f, 0.3f, 0.3f}};
+  app.line_col = (t_vec3){{1, 0.5f, 0.2f}};
   t_object obj;
   app.obj = &obj;
   init_obj(&obj);
   obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
+  obj.gl_line_color_id = glGetUniformLocation(shaderProgram, "line_col");
 
   // glLineWidth(3.0f);
 
@@ -180,6 +182,7 @@ int main(void) {
     // Draw
     glClearColor(app.bg_col.x, app.bg_col.y, app.bg_col.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    glUniform3fv(obj.gl_line_color_id, 1, app.line_col.raw);
     glDrawElements(GL_LINES, array_size(obj.indices), GL_UNSIGNED_INT, 0);
 
     draw_ui();

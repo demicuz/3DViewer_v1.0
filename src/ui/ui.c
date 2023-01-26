@@ -118,6 +118,7 @@ void render_ui(t_app *app, t_object *obj) {
 
   igDummy((ImVec2){.x = 0, .y = 5});
   igColorEdit3("bg_col", app->bg_col.raw, 0);
+  igColorEdit3("line_col", app->line_col.raw, 0);
 
   igDummy((ImVec2){.x = 0, .y = 5});
   igSeparator();

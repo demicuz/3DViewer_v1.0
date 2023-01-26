@@ -42,11 +42,13 @@ typedef struct {
   float scale;
 
   GLint gl_matrix_id;
+  GLint gl_line_color_id;
   bool view_was_updated;
 } t_object;
 
 typedef struct {
   t_vec3 bg_col;
+  t_vec3 line_col;
   t_object *obj;
   char filepath[4096];
   char *basename;
