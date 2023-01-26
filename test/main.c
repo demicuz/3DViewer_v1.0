@@ -89,6 +89,10 @@ START_TEST(translate) {
 }
 END_TEST
 
+// TODO: comparing raw floats is not guaranteed to work 100% of the time.
+// If somehow the compiler or smth optimizes the code and gets to a *slightly*
+// different result, these tests will fail. A better approach would be to check
+// if the numbers are relatively close: stackoverflow.com/a/67843030
 START_TEST(rotateX) {
   t_mat4 m = mat4_create_identity();
   t_mat4 dest;
