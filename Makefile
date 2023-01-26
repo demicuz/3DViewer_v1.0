@@ -16,6 +16,7 @@ OBJ			:= $(SRC:.c=.o)
 TEST_SRC	:= $(wildcard $(TEST_DIR)/*.c $(SRC_DIR)/*/*.c)
 TEST_OBJ	:= $(TEST_SRC:.c=.o)
 TEST_EXEC	:= run_tests
+TEST_LIBS   := -lcheck
 
 # TODO set correct flags
 CC			:= gcc -fdiagnostics-color=always
@@ -28,6 +29,7 @@ UNAME_S		:= $(shell uname -s)
 ifeq ($(UNAME_S), Linux) #LINUX
 	LDLIBS		+= -lGL `pkg-config --static --libs glfw3` `pkg-config --libs gtk+-3.0`
 	NFD_MAKE	:= $(NFD_DIR)/build/gmake_linux
+	TEST_LIBS   += -lm -lpthread -lrt -lsubunit
 endif
 
 ifeq ($(UNAME_S), Darwin) #APPLE
@@ -39,7 +41,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	NFD_MAKE	:= $(NFD_DIR)/build/gmake_macosx
 endif
 
-.PHONY: all bonus clean fclean re
+.PHONY: all bonus clean fclean re tests
 
 all: $(NAME)
 
@@ -54,7 +56,7 @@ $(LIBNFD): $(LIB_DIR)
 	cp $(NFD_DIR)/build/lib/Release/x64/libnfd.a $(LIB_DIR)
 
 $(NAME): $(OBJ) $(LIBCIMGUI) $(LIBNFD)
-	$(CC) $(LDFLAGS) $(OBJ) $(LDLIBS) -o $(NAME)
+	$(CC) $(LDFLAGS) $(OBJ) $(LDLIBS) -o $@
 
 # Turns out you don't have to have a rule for object files. 'Make' uses CFLAGS
 # and CPPFLAGS variables to compile .o files.
@@ -80,11 +82,11 @@ fclean: clean
 re: fclean all
 
 tests: $(TEST_EXEC)
-	@echo "------------------"
+	@echo "-------TESTS-------"
 	@./$(TEST_EXEC) 2> /dev/null
-	@echo "------------------"
+	@echo "-------------------"
 
 $(TEST_EXEC): $(TEST_OBJ) $(LIBCIMGUI) $(LIBNFD)
-	$(CC) $(LDFLAGS) $(TEST_OBJ) $(LDLIBS) -lcheck -o $(TEST_EXEC)
+	$(CC) $(LDFLAGS) $(TEST_OBJ) $(LDLIBS) $(TEST_LIBS) -o $@
 
 -include $(OBJ:.o=.d)
