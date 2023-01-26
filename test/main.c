@@ -181,7 +181,7 @@ START_TEST(multiple_transforms) {
   };
   // clang-format on
   array_compare(correct_dest, dest.raw, 16, &equal);
-  ck_assert_msg(equal, "Wrong scale matrix");
+  ck_assert_msg(equal, "Wrong transform matrix");
 }
 END_TEST
 
