@@ -139,7 +139,7 @@ int main(void) {
   app.obj = &obj;
   init_obj(&obj);
   obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
-  obj.gl_line_color_id = glGetUniformLocation(shaderProgram, "line_col");
+  obj.gl_line_col_id = glGetUniformLocation(shaderProgram, "line_col");
 
   // glLineWidth(3.0f);
 
@@ -182,7 +182,7 @@ int main(void) {
     // Draw
     glClearColor(app.bg_col.x, app.bg_col.y, app.bg_col.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glUniform3fv(obj.gl_line_color_id, 1, app.line_col.raw);
+    glUniform3fv(obj.gl_line_col_id, 1, app.line_col.raw);
     glDrawElements(GL_LINES, array_size(obj.indices), GL_UNSIGNED_INT, 0);
 
     draw_ui();

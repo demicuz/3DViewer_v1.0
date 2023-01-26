@@ -42,7 +42,7 @@ typedef struct {
   float scale;
 
   GLint gl_matrix_id;
-  GLint gl_line_color_id;
+  GLint gl_line_col_id;
   bool view_was_updated;
 } t_object;
 
