@@ -103,9 +103,8 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/imgui.ini
 
 style:
-	@clang-format -n $(shell find $(SRC_DIR) -type f -name "*.[ch]")
-	@clang-format -n $(shell find $(TEST_DIR) -type f -name "*.[ch]")
-	@clang-format -n $(wildcard $(INCLUDE_DIR)/*.h)
-# 	@clang-format -n $(shell find $(INCLUDE_DIR) -type f -name "*.[ch]")
+	@clang-format -n $(shell find $(SRC_DIR) -type f -name "*.[ch]") \
+                     $(shell find $(TEST_DIR) -type f -name "*.[ch]") \
+                     $(wildcard $(INCLUDE_DIR)/*.h)
 
 -include $(OBJ:.o=.d)
