@@ -81,7 +81,7 @@ re: fclean all
 
 tests: $(TEST_EXEC)
 	@echo "------------------"
-	@./$(TEST_EXEC)
+	@./$(TEST_EXEC) 2> /dev/null
 	@echo "------------------"
 
 $(TEST_EXEC): $(TEST_OBJ) $(LIBCIMGUI) $(LIBNFD)
