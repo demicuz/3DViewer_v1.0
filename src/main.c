@@ -33,7 +33,7 @@ void update_view_mat(t_object *obj) {
 
   mat4_scale_float(&obj->view, obj->scale, NULL);
 
-  mat4_translateZ(&obj->view, -CAMERA_DISTANCE/obj->scale);
+  mat4_translateZ(&obj->view, -CAMERA_DISTANCE / obj->scale);
   mat4_translate(&obj->view, &obj->translation, NULL);
 
   mat4_rotateX(&obj->view, obj->rotation.x, NULL);
@@ -42,10 +42,10 @@ void update_view_mat(t_object *obj) {
 
   // mat4_scale_float(&obj->view, obj->scale, NULL);
 
-  #ifdef DEBUG_PRINT
+#ifdef DEBUG_PRINT
   puts("View mat:");
   print_mat4(&obj->view);
-  #endif
+#endif
 }
 
 void update_mvp(t_object *obj) {
@@ -133,7 +133,7 @@ int main(void) {
 
   glUseProgram(shaderProgram);
 
-  app.bg_col = (t_vec3) {{0.2f, 0.3f, 0.3f}};
+  app.bg_col = (t_vec3){{0.2f, 0.3f, 0.3f}};
   t_object obj;
   app.obj = &obj;
   init_obj(&obj);
@@ -155,20 +155,20 @@ int main(void) {
     } else if (app.model_was_updated) {
       printf("vertices: %d\n", obj.vertex_count);
       glBindBuffer(GL_ARRAY_BUFFER, VBO);
-      glBufferData(GL_ARRAY_BUFFER, array_size(obj.vertices) * sizeof(GLfloat), obj.vertices,
-                   GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, array_size(obj.vertices) * sizeof(GLfloat),
+                   obj.vertices, GL_STATIC_DRAW);
 
       printf("indices: %d\n", array_size(obj.indices) / 2);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, array_size(obj.indices) * sizeof(GLuint), obj.indices,
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                   array_size(obj.indices) * sizeof(GLuint), obj.indices,
                    GL_STATIC_DRAW);
 
-      #ifdef DEBUG_PRINT
-      printf("bounding box:\n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n",
-        obj.bbox.x_min, obj.bbox.x_max,
-        obj.bbox.y_min, obj.bbox.y_max,
-        obj.bbox.z_min, obj.bbox.z_max);
-      #endif
+#ifdef DEBUG_PRINT
+      printf("bounding box:\n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n", obj.bbox.x_min,
+             obj.bbox.x_max, obj.bbox.y_min, obj.bbox.y_max, obj.bbox.z_min,
+             obj.bbox.z_max);
+#endif
 
       mat4_set_identity(&obj.model);
       mat4_unit_box(&obj.bbox, &obj.model);

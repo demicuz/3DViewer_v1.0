@@ -16,7 +16,6 @@
     }                                                                          \
   } while (0)
 
-
 START_TEST(parse_cube) {
   t_object obj = {0};
   bool parsed = parse_obj("models/test-cube.obj", &obj);

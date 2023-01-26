@@ -22,7 +22,8 @@ void *array_realloc(void *ptr, unsigned int n, size_t elem_size) {
     ncap = nsz;
   ncap = (ncap + 15) & ~15u;
 
-  r = realloc(ptr ? _array_header(ptr) : 0, elem_size * ncap + 2 * sizeof(unsigned int));
+  r = realloc(ptr ? _array_header(ptr) : 0,
+              elem_size * ncap + 2 * sizeof(unsigned int));
   if (!r)
     return 0;
 
@@ -32,10 +33,8 @@ void *array_realloc(void *ptr, unsigned int n, size_t elem_size) {
   return (r + 2);
 }
 
-bool starts_with(const char *start, const char *s)
-{
-  while (*start && *s && *start == *s)
-  {
+bool starts_with(const char *start, const char *s) {
+  while (*start && *s && *start == *s) {
     start++;
     s++;
   }
@@ -43,8 +42,8 @@ bool starts_with(const char *start, const char *s)
 }
 
 char *skip_whitespace(char *s) {
-  while (*s == ' ' || *s == '\n' || *s == '\v' || *s == '\f' || *s == '\r'
-    || *s == '\t') {
+  while (*s == ' ' || *s == '\n' || *s == '\v' || *s == '\f' || *s == '\r' ||
+         *s == '\t') {
     s++;
   }
 

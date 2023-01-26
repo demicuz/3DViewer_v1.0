@@ -21,7 +21,7 @@
 
 // TODO set custom font
 void init_ui(GLFWwindow *window, t_app *app) {
-  const char* glsl_version = "#version 330";
+  const char *glsl_version = "#version 330";
 
   igCreateContext(NULL);
 
@@ -62,29 +62,27 @@ void load_file(t_app *app, t_object *obj) {
   nfdresult_t result = NFD_OpenDialog("obj", "./models", &outPath);
 
   if (result == NFD_OKAY) {
-      strcpy(app->filepath, outPath);
-      free(outPath);
-      puts(app->filepath);
-      app->basename = strrchr(app->filepath, '/') + 1;
+    strcpy(app->filepath, outPath);
+    free(outPath);
+    puts(app->filepath);
+    app->basename = strrchr(app->filepath, '/') + 1;
 
-      if (parse_obj(app->filepath, obj)) {
-        app->parse_error = false;
-        app->model_was_updated = true;
-      } else {
-        app->parse_error = true;
-      }
-  }
-  else if (result == NFD_CANCEL) {
-      puts("User pressed cancel.");
-  }
-  else {
-      (void)fprintf(stderr, "Error: %s\n", NFD_GetError());
+    if (parse_obj(app->filepath, obj)) {
+      app->parse_error = false;
+      app->model_was_updated = true;
+    } else {
+      app->parse_error = true;
+    }
+  } else if (result == NFD_CANCEL) {
+    puts("User pressed cancel.");
+  } else {
+    (void)fprintf(stderr, "Error: %s\n", NFD_GetError());
   }
 }
 
 void render_ui(t_app *app, t_object *obj) {
-	// TODO does this have an overhead?
-	ImGui_ImplOpenGL3_NewFrame();
+  // TODO does this have an overhead?
+  ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   igNewFrame();
 
@@ -93,14 +91,14 @@ void render_ui(t_app *app, t_object *obj) {
 
   igBegin("Control Panel", NULL, 0);
 
-  igDummy((ImVec2) {.x = 0, .y = 3});
+  igDummy((ImVec2){.x = 0, .y = 3});
   ImVec2 buttonSize = {.x = 0, .y = 0};
   if (igButton("Load .obj file", buttonSize)) {
     load_file(app, obj);
   }
 
   if (*app->filepath) {
-    igDummy((ImVec2) {.x = 0, .y = 5});
+    igDummy((ImVec2){.x = 0, .y = 5});
     igText(app->basename);
     if (!app->parse_error) {
       igText("Vertices: %d", obj->vertex_count);
@@ -110,35 +108,44 @@ void render_ui(t_app *app, t_object *obj) {
     }
   }
 
-  igDummy((ImVec2) {.x = 0, .y = 5});
+  igDummy((ImVec2){.x = 0, .y = 5});
   igSeparator();
 
-  igDummy((ImVec2) {.x = 0, .y = 5});
+  igDummy((ImVec2){.x = 0, .y = 5});
   igText("Font scale");
-  igDragFloat("###", &app->ioptr->FontGlobalScale, 0.005f, 0.75f, 3.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+  igDragFloat("###", &app->ioptr->FontGlobalScale, 0.005f, 0.75f, 3.0f, "%.2f",
+              ImGuiSliderFlags_AlwaysClamp);
 
-  igDummy((ImVec2) {.x = 0, .y = 5});
+  igDummy((ImVec2){.x = 0, .y = 5});
   igColorEdit3("bg_col", app->bg_col.raw, 0);
 
-  igDummy((ImVec2) {.x = 0, .y = 5});
+  igDummy((ImVec2){.x = 0, .y = 5});
   igSeparator();
 
-  igDummy((ImVec2) {.x = 0, .y = 5});
+  igDummy((ImVec2){.x = 0, .y = 5});
   igText("Translation");
-  // TODO obj->view_was_updated |= igSliderFloat("X", &obj->translation.x, -obj->scale, obj->scale, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
+  // TODO obj->view_was_updated |= igSliderFloat("X", &obj->translation.x,
+  // -obj->scale, obj->scale, "%.3f", 0);
+  obj->view_was_updated |=
+      igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
+  obj->view_was_updated |=
+      igSliderFloat("Y", &obj->translation.y, -1, 1, "%.3f", 0);
+  obj->view_was_updated |=
+      igSliderFloat("Z", &obj->translation.z, -1, 1, "%.3f", 0);
 
-  igDummy((ImVec2) {.x = 0, .y = 5});
+  igDummy((ImVec2){.x = 0, .y = 5});
   igText("Rotation");
-  obj->view_was_updated |= igSliderFloat("OX", &obj->rotation.x, -floatPI, floatPI, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("OY", &obj->rotation.y, -floatPI, floatPI, "%.3f", 0);
-  obj->view_was_updated |= igSliderFloat("OZ", &obj->rotation.z, -floatPI, floatPI, "%.3f", 0);
+  obj->view_was_updated |=
+      igSliderFloat("OX", &obj->rotation.x, -floatPI, floatPI, "%.3f", 0);
+  obj->view_was_updated |=
+      igSliderFloat("OY", &obj->rotation.y, -floatPI, floatPI, "%.3f", 0);
+  obj->view_was_updated |=
+      igSliderFloat("OZ", &obj->rotation.z, -floatPI, floatPI, "%.3f", 0);
 
-  igDummy((ImVec2) {.x = 0, .y = 5});
+  igDummy((ImVec2){.x = 0, .y = 5});
   igText("Scale");
-  obj->view_was_updated |= igSliderFloat("##", &obj->scale, 0.01f, 5, "%.3f", 0);
+  obj->view_was_updated |=
+      igSliderFloat("##", &obj->scale, 0.01f, 5, "%.3f", 0);
 
   igEnd();
 }
@@ -149,7 +156,7 @@ void draw_ui(void) {
 }
 
 void ui_cleanup(void) {
-	ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   igDestroyContext(NULL);
 }

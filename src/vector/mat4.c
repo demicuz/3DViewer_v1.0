@@ -507,4 +507,3 @@ void print_mat4(const t_mat4 *m) {
          m->raw[9], m->raw[13], m->raw[2], m->raw[6], m->raw[10], m->raw[14],
          m->raw[3], m->raw[7], m->raw[11], m->raw[15]);
 }
-
