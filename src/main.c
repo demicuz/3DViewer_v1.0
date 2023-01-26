@@ -56,6 +56,8 @@ void update_mvp(t_object *obj) {
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action,
                   int mode) {
+  (void)scancode;
+  (void)mode;
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, GL_TRUE);
   }
@@ -65,6 +67,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action,
 static float aspect = ASPECT;
 static bool window_was_resized = false;
 void resize_callback(GLFWwindow *window, int width, int height) {
+  (void)window;
   glViewport(0, 0, width, height);
   aspect = (float)width / (float)height;
   window_was_resized = true;

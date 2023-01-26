@@ -23,7 +23,7 @@ TEST_LIBS   := -lcheck
 # TODO set correct flags
 CC			:= gcc -fdiagnostics-color=always
 CPPFLAGS	:= -I $(INCLUDE_DIR) -I $(NFD_DIR)/src/include -MMD -MP -DCIMGUI_USE_OPENGL3 -DCIMGUI_USE_GLFW
-CFLAGS		:= -std=c11 -pedantic -Og -g -Wall#-Wextra#-Werror
+CFLAGS		:= -std=c11 -pedantic -Og -g -Wall -Wextra -Werror
 LDFLAGS		:= -L $(LIB_DIR)
 LDLIBS		:= -lcimgui -lnfd -lstdc++
 
