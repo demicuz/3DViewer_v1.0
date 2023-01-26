@@ -27,8 +27,8 @@ Then run `make`.
 - [X] `.obj` file parsing, loading, correct error handling
 	- [ ] Support for negative vertex indices (will require a second pass during parsing)
 - [X] Unit tests for model loading and affine transformations
-- [ ] `make install`
-- [ ] `make uninstall`
+- [X] `make install`
+- [X] `make uninstall`
 - [ ] `make dvi`
 - [ ] `make dist`
 - [X] `make tests`

@@ -1,8 +1,10 @@
 NAME		:= 3DViewer
+PREFIX		:= /.local
 
 SRC_DIR		:= src
 LIB_DIR		:= lib
 TEST_DIR	:= test
+INCLUDE_DIR	:= include
 
 CIMGUI_DIR	:= cimgui
 LIBCIMGUI	:= $(LIB_DIR)/libcimgui.a
@@ -20,7 +22,7 @@ TEST_LIBS   := -lcheck
 
 # TODO set correct flags
 CC			:= gcc -fdiagnostics-color=always
-CPPFLAGS	:= -I include -I $(NFD_DIR)/src/include -MMD -MP -DCIMGUI_USE_OPENGL3 -DCIMGUI_USE_GLFW
+CPPFLAGS	:= -I $(INCLUDE_DIR) -I $(NFD_DIR)/src/include -MMD -MP -DCIMGUI_USE_OPENGL3 -DCIMGUI_USE_GLFW
 CFLAGS		:= -std=c11 -pedantic -Og -g -Wall#-Wextra#-Werror
 LDFLAGS		:= -L $(LIB_DIR)
 LDLIBS		:= -lcimgui -lnfd -lstdc++
@@ -41,7 +43,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	NFD_MAKE	:= $(NFD_DIR)/build/gmake_macosx
 endif
 
-.PHONY: all bonus clean fclean re tests
+.PHONY: all bonus clean fclean re tests style
 
 all: $(NAME)
 
@@ -88,5 +90,22 @@ tests: $(TEST_EXEC)
 
 $(TEST_EXEC): $(TEST_OBJ) $(LIBCIMGUI) $(LIBNFD)
 	$(CC) $(LDFLAGS) $(TEST_OBJ) $(LDLIBS) $(TEST_LIBS) -o $@
+
+# Example usage:
+# make install DESTDIR=~
+install: $(NAME)
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -m 755 $(NAME) $(DESTDIR)$(PREFIX)/bin
+	cp imgui.ini $(DESTDIR)$(PREFIX)/bin
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(NAME)
+	rm -f $(DESTDIR)$(PREFIX)/bin/imgui.ini
+
+style:
+	@clang-format -n $(shell find $(SRC_DIR) -type f -name "*.[ch]")
+	@clang-format -n $(shell find $(TEST_DIR) -type f -name "*.[ch]")
+	@clang-format -n $(wildcard $(INCLUDE_DIR)/*.h)
+# 	@clang-format -n $(shell find $(INCLUDE_DIR) -type f -name "*.[ch]")
 
 -include $(OBJ:.o=.d)
