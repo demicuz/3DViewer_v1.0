@@ -5,15 +5,15 @@
 
 #include <check.h>
 
-#define array_compare(a, b, len, result)                                       \
-  do {                                                                         \
-    *(result) = true;                                                          \
-    for (size_t i = 0; i < (len); ++i) {                                       \
-      if ((a)[i] != (b)[i]) {                                                  \
-        *(result) = false;                                                     \
-        break;                                                                 \
-      }                                                                        \
-    }                                                                          \
+#define array_compare(a, b, len, result) \
+  do {                                   \
+    *(result) = true;                    \
+    for (size_t i = 0; i < (len); ++i) { \
+      if ((a)[i] != (b)[i]) {            \
+        *(result) = false;               \
+        break;                           \
+      }                                  \
+    }                                    \
   } while (0)
 
 START_TEST(parse_cube) {
@@ -49,12 +49,12 @@ START_TEST(parse_cube) {
   ck_assert_msg(equal, "Wrong vertices");
 
   GLuint correct_indices[48] = {
-      1, 2, 2, 3, 3, 4, 4, 1, // front face
-      5, 6, 6, 7, 7, 8, 8, 5, // back face
-      3, 4, 4, 8, 8, 7, 7, 3, // left face
-      1, 2, 2, 6, 6, 5, 5, 1, // right face
-      1, 5, 5, 8, 8, 4, 4, 1, // top face
-      2, 6, 6, 7, 7, 3, 3, 2, // bottom face
+      1, 2, 2, 3, 3, 4, 4, 1,  // front face
+      5, 6, 6, 7, 7, 8, 8, 5,  // back face
+      3, 4, 4, 8, 8, 7, 7, 3,  // left face
+      1, 2, 2, 6, 6, 5, 5, 1,  // right face
+      1, 5, 5, 8, 8, 4, 4, 1,  // top face
+      2, 6, 6, 7, 7, 3, 3, 2,  // bottom face
   };
   array_compare(correct_indices, obj.indices, 48, &equal);
   ck_assert_msg(equal, "Wrong indices");

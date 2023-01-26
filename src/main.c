@@ -102,12 +102,12 @@ int main(void) {
   // TODO a data structure for non-repetitive lines? Now we're drawing each line
   // at least two times. There could be more, depending on the model.
   GLuint indices[] = {
-      0, 1, 1, 2, 2, 3, 3, 0, // front face
-      4, 5, 5, 6, 6, 7, 7, 4, // back face
-      2, 3, 3, 7, 7, 6, 6, 2, // left face
-      0, 1, 1, 5, 5, 4, 4, 0, // right face
-      0, 4, 4, 7, 7, 3, 3, 0, // top face
-      1, 5, 5, 6, 6, 2, 2, 1, // bottom face
+      0, 1, 1, 2, 2, 3, 3, 0,  // front face
+      4, 5, 5, 6, 6, 7, 7, 4,  // back face
+      2, 3, 3, 7, 7, 6, 6, 2,  // left face
+      0, 1, 1, 5, 5, 4, 4, 0,  // right face
+      0, 4, 4, 7, 7, 3, 3, 0,  // top face
+      1, 5, 5, 6, 6, 2, 2, 1,  // bottom face
   };
 
   GLuint VAO;
@@ -188,7 +188,7 @@ int main(void) {
     glfwSwapBuffers(window);
 
     // glfwPollEvents(); // Update 60 times per second
-    glfwWaitEvents(); // Update only on key press, mouse move, etc.
+    glfwWaitEvents();  // Update only on key press, mouse move, etc.
   }
 
   glDeleteVertexArrays(1, &VAO);

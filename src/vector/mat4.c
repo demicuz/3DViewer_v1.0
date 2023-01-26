@@ -185,8 +185,8 @@ t_mat4 *mat4_rotate(t_mat4 *mat, float angle, t_vec3 *axis, t_mat4 *dest) {
 
   if (!dest) {
     dest = mat;
-  } else if (mat != dest) { // If the source and destination differ, copy the
-                            // unchanged last row
+  } else if (mat != dest) {  // If the source and destination differ, copy the
+                             // unchanged last row
     dest->raw[12] = mat->raw[12];
     dest->raw[13] = mat->raw[13];
     dest->raw[14] = mat->raw[14];
@@ -218,8 +218,8 @@ t_mat4 *mat4_rotateX(t_mat4 *mat, float angle, t_mat4 *dest) {
 
   if (!dest) {
     dest = mat;
-  } else if (mat != dest) { // If the source and destination differ, copy the
-                            // unchanged rows
+  } else if (mat != dest) {  // If the source and destination differ, copy the
+                             // unchanged rows
     dest->raw[0] = mat->raw[0];
     dest->raw[1] = mat->raw[1];
     dest->raw[2] = mat->raw[2];
@@ -251,8 +251,8 @@ t_mat4 *mat4_rotateY(t_mat4 *mat, float angle, t_mat4 *dest) {
 
   if (!dest) {
     dest = mat;
-  } else if (mat != dest) { // If the source and destination differ, copy the
-                            // unchanged rows
+  } else if (mat != dest) {  // If the source and destination differ, copy the
+                             // unchanged rows
     dest->raw[4] = mat->raw[4];
     dest->raw[5] = mat->raw[5];
     dest->raw[6] = mat->raw[6];
@@ -284,8 +284,8 @@ t_mat4 *mat4_rotateZ(t_mat4 *mat, float angle, t_mat4 *dest) {
 
   if (!dest) {
     dest = mat;
-  } else if (mat != dest) { // If the source and destination differ, copy the
-                            // unchanged last row
+  } else if (mat != dest) {  // If the source and destination differ, copy the
+                             // unchanged last row
     dest->raw[8] = mat->raw[8];
     dest->raw[9] = mat->raw[9];
     dest->raw[10] = mat->raw[10];
@@ -499,11 +499,12 @@ t_mat4 *mat4_unit_box(t_bbox *bbox, t_mat4 *dest) {
 }
 
 void print_mat4(const t_mat4 *m) {
-  printf("%.2f %.2f %.2f %.2f\n"
-         "%.2f %.2f %.2f %.2f\n"
-         "%.2f %.2f %.2f %.2f\n"
-         "%.2f %.2f %.2f %.2f\n",
-         m->raw[0], m->raw[4], m->raw[8], m->raw[12], m->raw[1], m->raw[5],
-         m->raw[9], m->raw[13], m->raw[2], m->raw[6], m->raw[10], m->raw[14],
-         m->raw[3], m->raw[7], m->raw[11], m->raw[15]);
+  printf(
+      "%.2f %.2f %.2f %.2f\n"
+      "%.2f %.2f %.2f %.2f\n"
+      "%.2f %.2f %.2f %.2f\n"
+      "%.2f %.2f %.2f %.2f\n",
+      m->raw[0], m->raw[4], m->raw[8], m->raw[12], m->raw[1], m->raw[5],
+      m->raw[9], m->raw[13], m->raw[2], m->raw[6], m->raw[10], m->raw[14],
+      m->raw[3], m->raw[7], m->raw[11], m->raw[15]);
 }

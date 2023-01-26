@@ -18,14 +18,16 @@ void *array_realloc(void *ptr, unsigned int n, size_t elem_size) {
   unsigned int ncap = 3 * cap / 2;
   unsigned int *r;
 
-  if (ncap < nsz)
+  if (ncap < nsz) {
     ncap = nsz;
+  }
   ncap = (ncap + 15) & ~15u;
 
   r = realloc(ptr ? _array_header(ptr) : 0,
               elem_size * ncap + 2 * sizeof(unsigned int));
-  if (!r)
+  if (!r) {
     return 0;
+  }
 
   r[0] = sz;
   r[1] = ncap;
