@@ -7,11 +7,11 @@ On Linux, install GLFW and `gtk-devel` (for "open file" dialog window). On Mac, 
 
 __Debian__ (didn't test myself, but should work):
 ```shell
-sudo apt install libglfw3-dev libgtk-3-dev
+sudo apt install libglfw3-dev libgtk-3-dev libcheck-dev
 ```
 __Fedora__:
 ```shell
-sudo dnf install glfw-devel gtk3-devel
+sudo dnf install glfw-devel gtk3-devel check-devel
 ```
 
 Then run `make`.
@@ -26,5 +26,10 @@ Then run `make`.
 	- Works. Sort of.
 - [X] `.obj` file parsing, loading, correct error handling
 	- [ ] Support for negative vertex indices (will require a second pass during parsing)
-- [ ] Unit tests for model loading and affine transformations
-- [ ] Makefile rules: `install`, `uninstall`, `dvi`, `dist`, `tests`, `gcov_report`
+- [X] Unit tests for model loading and affine transformations
+- [ ] `make install`
+- [ ] `make uninstall`
+- [ ] `make dvi`
+- [ ] `make dist`
+- [X] `make tests`
+- [ ] `make gcov_report`
