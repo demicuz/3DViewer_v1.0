@@ -34,9 +34,6 @@ typedef union {
   };
 } t_bbox;
 
-// vec3
-t_vec3 vec3(float x, float y, float z);
-
 // mat4
 t_mat4 mat4_create_identity(void);
 t_mat4 *mat4_set_identity(t_mat4 *dest);
