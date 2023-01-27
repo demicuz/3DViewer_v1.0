@@ -125,8 +125,6 @@ void render_ui(t_app *app, t_object *obj) {
 
   igDummy((ImVec2){.x = 0, .y = 5});
   igText("Translation");
-  // TODO obj->view_was_updated |= igSliderFloat("X", &obj->translation.x,
-  // -obj->scale, obj->scale, "%.3f", 0);
   obj->view_was_updated |=
       igSliderFloat("X", &obj->translation.x, -1, 1, "%.3f", 0);
   obj->view_was_updated |=

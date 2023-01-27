@@ -13,7 +13,6 @@
 #include <stdbool.h>
 
 bool init_obj(t_object *obj) {
-  *obj = (t_object){0};
   obj->scale = 1;
   obj->view_was_updated = true;
 
@@ -39,8 +38,6 @@ void update_view_mat(t_object *obj) {
   mat4_rotateX(&obj->view, obj->rotation.x, NULL);
   mat4_rotateY(&obj->view, obj->rotation.y, NULL);
   mat4_rotateZ(&obj->view, obj->rotation.z, NULL);
-
-  // mat4_scale_float(&obj->view, obj->scale, NULL);
 
 #ifdef DEBUG_PRINT
   puts("View mat:");
@@ -75,6 +72,13 @@ void resize_callback(GLFWwindow *window, int width, int height) {
 
 int main(void) {
   t_app app = {0};
+  t_object obj = {0};
+
+  app.obj = &obj;
+  init_obj(&obj);
+  app.bg_col = (t_vec3){{0.2f, 0.3f, 0.3f}};
+  app.line_col = (t_vec3){{1, 0.5f, 0.2f}};
+
   GLFWwindow *window = get_glfw_window();
   glfwSetKeyCallback(window, key_callback);
   glfwSetFramebufferSizeCallback(window, resize_callback);
@@ -87,32 +91,6 @@ int main(void) {
     exit(1);
   }
 
-  // clang-format off
-  GLfloat cube_vertices[] = {
-    // front face
-     1,  1, -1, // 0 top right
-     1, -1, -1, // 1 bottom right
-    -1, -1, -1, // 2 bottom left
-    -1,  1, -1, // 3 top left
-    // back face
-     1,  1,  1, // 4 top right
-     1, -1,  1, // 5 bottom right
-    -1, -1,  1, // 6 bottom left
-    -1,  1,  1  // 7 top left
-  };
-  // clang-format on
-
-  // TODO a data structure for non-repetitive lines? Now we're drawing each line
-  // at least two times. There could be more, depending on the model.
-  GLuint indices[] = {
-      0, 1, 1, 2, 2, 3, 3, 0,  // front face
-      4, 5, 5, 6, 6, 7, 7, 4,  // back face
-      2, 3, 3, 7, 7, 6, 6, 2,  // left face
-      0, 1, 1, 5, 5, 4, 4, 0,  // right face
-      0, 4, 4, 7, 7, 3, 3, 0,  // top face
-      1, 5, 5, 6, 6, 2, 2, 1,  // bottom face
-  };
-
   GLuint VAO;
   GLuint VBO;
   GLuint EBO;
@@ -121,14 +99,8 @@ int main(void) {
   glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO);
-
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices,
-               GL_STATIC_DRAW);
-
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-               GL_STATIC_DRAW);
 
   GLint posAttrib = glGetAttribLocation(shaderProgram, "aPos");
   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -136,11 +108,6 @@ int main(void) {
 
   glUseProgram(shaderProgram);
 
-  app.bg_col = (t_vec3){{0.2f, 0.3f, 0.3f}};
-  app.line_col = (t_vec3){{1, 0.5f, 0.2f}};
-  t_object obj;
-  app.obj = &obj;
-  init_obj(&obj);
   obj.gl_matrix_id = glGetUniformLocation(shaderProgram, "MVP");
   obj.gl_line_col_id = glGetUniformLocation(shaderProgram, "line_col");
 
