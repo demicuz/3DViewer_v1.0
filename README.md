@@ -32,4 +32,4 @@ Then run `make`.
 - [ ] `make dvi`
 - [ ] `make dist`
 - [X] `make tests`
-- [ ] `make gcov_report`
+- [X] `make gcov_report`

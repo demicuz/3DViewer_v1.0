@@ -32,6 +32,7 @@ ifeq ($(UNAME_S), Linux) #LINUX
 	LDLIBS		+= -lGL `pkg-config --static --libs glfw3` `pkg-config --libs gtk+-3.0`
 	NFD_MAKE	:= $(NFD_DIR)/build/gmake_linux
 	TEST_LIBS   += -lm -lpthread -lrt -lsubunit
+	OPEN		:= xdg-open
 endif
 
 ifeq ($(UNAME_S), Darwin) #APPLE
@@ -41,9 +42,10 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	LDFLAGS		+= -L/usr/local/lib -L/opt/local/lib -L/Users/$(USER)/goinfre/homebrew/opt/glfw/lib
 	LDLIBS		+= -lglfw -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 	NFD_MAKE	:= $(NFD_DIR)/build/gmake_macosx
+	OPEN		:= open
 endif
 
-.PHONY: all bonus clean fclean re tests style
+.PHONY: all bonus clean_obj clean fclean re tests style
 
 all: $(NAME)
 
@@ -68,10 +70,13 @@ $(NAME): $(OBJ) $(LIBCIMGUI) $(LIBNFD)
 $(LIB_DIR):
 	mkdir -p $@
 
-clean:
+clean_obj:
 	@rm -vf $(OBJ)
+	@rm -vf $(wildcard $(TEST_DIR)/*.o)
+
+clean: clean_obj
 	@rm -vf $(OBJ:.o=.d)
-	@rm -vf $(wildcard $(TEST_DIR)/*.o $(TEST_DIR)/*.d)
+	@rm -vf $(wildcard $(TEST_DIR)/*.d)
 	$(MAKE) clean --directory=$(CIMGUI_DIR)
 	$(MAKE) clean --directory=$(NFD_MAKE)
 
@@ -79,6 +84,12 @@ fclean: clean
 	@rm -vf $(NAME)
 	@rm -vf $(TEST_EXEC)
 	@rm -rvf $(LIB_DIR)
+	@rm -rvf gcov_report
+	@rm -vf gcov_report.info
+	@rm -vf $(shell find $(SRC_DIR) -type f -name "*.gcda")
+	@rm -vf $(shell find $(SRC_DIR) -type f -name "*.gcno")
+	@rm -vf $(shell find $(TEST_DIR) -type f -name "*.gcno")
+	@rm -vf $(shell find $(TEST_DIR) -type f -name "*.gcno")
 	$(MAKE) fclean --directory=$(CIMGUI_DIR)
 
 re: fclean all
@@ -90,6 +101,21 @@ tests: $(TEST_EXEC)
 
 $(TEST_EXEC): $(TEST_OBJ) $(LIBCIMGUI) $(LIBNFD)
 	$(CC) $(LDFLAGS) $(TEST_OBJ) $(LDLIBS) $(TEST_LIBS) -o $@
+
+add_coverage_flag:
+	$(eval CFLAGS += --coverage)
+	$(eval LDFLAGS += --coverage)
+
+# TODO wasteful `gcov_report`
+# Currently deletes all `.o` files, generates new ones with `--coverage`,
+# then deletes them again. Far from optimal!
+gcov_report: add_coverage_flag clean_obj tests
+	@lcov --directory . -t "3DViewer_tests" -o gcov_report.info -c --no-external
+	@lcov -q --remove gcov_report.info "`pwd`/test/*" -o gcov_report.info
+	@lcov -q --remove gcov_report.info "`pwd`/src/3rd-party/*" -o gcov_report.info
+	@genhtml -o $@ gcov_report.info
+	@$(OPEN) ./gcov_report/index.html
+	@rm -vf $(OBJ) $(wildcard $(TEST_DIR)/*.o)
 
 # Example usage:
 # make install DESTDIR=~

@@ -1,10 +1,15 @@
 3DViewer
+run_tests
 
 .cache/
 .clang-tidy
 *.o
 *.d
 *.a
+*.gcda
+*.gcno
+gcov_report.info
+gcov_report/
 
 compile_commands.json
 *.sublime-*
