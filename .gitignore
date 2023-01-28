@@ -8,9 +8,10 @@ run_tests
 *.a
 *.gcda
 *.gcno
+*.tar.gz
 gcov_report.info
 gcov_report/
-docs/html
+docs_generated
 
 compile_commands.json
 *.sublime-*

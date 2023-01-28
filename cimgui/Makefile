@@ -64,7 +64,8 @@ clean:
 	rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(OUTPUTNAME)
+	@rm -vf $(OUTPUTNAME)
+	@rm -vf libcimgui.a
 
 re: fclean all
 

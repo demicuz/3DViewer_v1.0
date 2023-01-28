@@ -45,7 +45,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	OPEN		:= open
 endif
 
-.PHONY: all bonus clean_obj clean fclean re tests html style
+.PHONY: all bonus clean_obj clean fclean re tests html dist install uninstall style
 
 all: $(NAME)
 
@@ -79,6 +79,7 @@ clean: clean_obj
 	@rm -vf $(wildcard $(TEST_DIR)/*.d)
 	$(MAKE) clean --directory=$(CIMGUI_DIR)
 	$(MAKE) clean --directory=$(NFD_MAKE)
+	@rm -rvf $(NFD_DIR)/build/obj
 
 fclean: clean
 	@rm -vf $(NAME)
@@ -90,7 +91,8 @@ fclean: clean
 	@rm -vf $(shell find $(SRC_DIR) -type f -name "*.gcno")
 	@rm -vf $(shell find $(TEST_DIR) -type f -name "*.gcno")
 	@rm -vf $(shell find $(TEST_DIR) -type f -name "*.gcno")
-	@rm -rvf docs/html
+	@rm -rvf docs_generated
+	@rm -rf 3DViewer_v1.0.tar.gz
 	$(MAKE) fclean --directory=$(CIMGUI_DIR)
 
 re: fclean all
@@ -122,7 +124,22 @@ dvi: html
 
 html:
 	@doxygen doxygen.conf
-	@$(OPEN) docs/html/index.html
+	@$(OPEN) docs_generated/html/index.html
+
+dist: fclean
+	mkdir -p 3DViewer_v1.0_dist
+	ln -s "`pwd`/Makefile" 3DViewer_v1.0_dist/Makefile
+	ln -s "`pwd`/doxygen.conf" 3DViewer_v1.0_dist/doxygen.conf
+	ln -s "`pwd`/imgui.ini" 3DViewer_v1.0_dist/imgui.ini
+	ln -s "`pwd`/.clang-format" 3DViewer_v1.0_dist/.clang-format
+	ln -s "`pwd`/src" 3DViewer_v1.0_dist/src
+	ln -s "`pwd`/include" 3DViewer_v1.0_dist/include
+	ln -s "`pwd`/docs" 3DViewer_v1.0_dist/docs
+	ln -s "`pwd`/models" 3DViewer_v1.0_dist/models
+	ln -s "`pwd`/cimgui" 3DViewer_v1.0_dist/cimgui
+	ln -s "`pwd`/nativefiledialog" 3DViewer_v1.0_dist/nativefiledialog
+	tar -h -cvzf 3DViewer_v1.0.tar.gz 3DViewer_v1.0_dist
+	rm -rvf 3DViewer_v1.0_dist
 
 # Example usage:
 # make install DESTDIR=~
