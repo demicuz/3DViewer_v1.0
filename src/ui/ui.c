@@ -144,7 +144,7 @@ void render_ui(t_app *app, t_object *obj) {
   igDummy((ImVec2){.x = 0, .y = 5});
   igText("Scale");
   obj->view_was_updated |=
-      igSliderFloat("##", &obj->scale, 0.01f, 5, "%.3f", 0);
+      igSliderFloat("##", &obj->scale, 0.1f, 10, "%.3f", 0);
 
   igEnd();
 }

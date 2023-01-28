@@ -132,12 +132,12 @@ dist: fclean
 	ln -s "`pwd`/doxygen.conf" 3DViewer_v1.0_dist/doxygen.conf
 	ln -s "`pwd`/imgui.ini" 3DViewer_v1.0_dist/imgui.ini
 	ln -s "`pwd`/.clang-format" 3DViewer_v1.0_dist/.clang-format
-	ln -s "`pwd`/src" 3DViewer_v1.0_dist/src
-	ln -s "`pwd`/include" 3DViewer_v1.0_dist/include
+	ln -s "`pwd`/$(SRC_DIR)" 3DViewer_v1.0_dist/$(SRC_DIR)
+	ln -s "`pwd`/$(INCLUDE_DIR)" 3DViewer_v1.0_dist/$(INCLUDE_DIR)
 	ln -s "`pwd`/docs" 3DViewer_v1.0_dist/docs
 	ln -s "`pwd`/models" 3DViewer_v1.0_dist/models
-	ln -s "`pwd`/cimgui" 3DViewer_v1.0_dist/cimgui
-	ln -s "`pwd`/nativefiledialog" 3DViewer_v1.0_dist/nativefiledialog
+	ln -s "`pwd`/$(CIMGUI_DIR)" 3DViewer_v1.0_dist/$(CIMGUI_DIR)
+	ln -s "`pwd`/$(NFD_DIR)" 3DViewer_v1.0_dist/$(NFD_DIR)
 	tar -h -cvzf 3DViewer_v1.0.tar.gz 3DViewer_v1.0_dist
 	rm -rvf 3DViewer_v1.0_dist
 

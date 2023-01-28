@@ -66,8 +66,6 @@ t_mat4 *mat4_translateZ(t_mat4 *mat, float z);
 
 t_mat4 *mat4_perspective(float fovy, float aspect, float near, float far,
                          t_mat4 *dest);
-// TODO probably remove lookAt, as the camera will always point to the same spot
-t_mat4 *mat4_lookAt(t_vec3 *eye, t_vec3 *center, t_vec3 *up, t_mat4 *dest);
 t_mat4 *mat4_unit_box(t_bbox *bbox, t_mat4 *dest);
 
 void print_mat4(const t_mat4 *m);
