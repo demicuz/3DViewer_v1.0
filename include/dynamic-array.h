@@ -1,6 +1,12 @@
 #ifndef DYNAMIC_ARRAY_H
 #define DYNAMIC_ARRAY_H
 
+/*! @file dynamic-array.h
+ *  @brief A dynamic array implementation.
+ *
+ *  Uses a bunch of arcane macros to create and update an array.
+ */
+
 #include <stdlib.h>
 
 #define array_clean(_arr) ((_arr) ? free(_array_header(_arr)), 0 : 0)

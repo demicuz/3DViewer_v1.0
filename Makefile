@@ -45,7 +45,7 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 	OPEN		:= open
 endif
 
-.PHONY: all bonus clean_obj clean fclean re tests style
+.PHONY: all bonus clean_obj clean fclean re tests html style
 
 all: $(NAME)
 
@@ -90,6 +90,7 @@ fclean: clean
 	@rm -vf $(shell find $(SRC_DIR) -type f -name "*.gcno")
 	@rm -vf $(shell find $(TEST_DIR) -type f -name "*.gcno")
 	@rm -vf $(shell find $(TEST_DIR) -type f -name "*.gcno")
+	@rm -rvf docs/html
 	$(MAKE) fclean --directory=$(CIMGUI_DIR)
 
 re: fclean all
@@ -116,6 +117,12 @@ gcov_report: add_coverage_flag clean_obj tests
 	@genhtml -o $@ gcov_report.info
 	@$(OPEN) ./gcov_report/index.html
 	@rm -vf $(OBJ) $(wildcard $(TEST_DIR)/*.o)
+
+dvi: html
+
+html:
+	@doxygen doxygen.conf
+	@$(OPEN) docs/html/index.html
 
 # Example usage:
 # make install DESTDIR=~

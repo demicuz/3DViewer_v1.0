@@ -10,6 +10,7 @@ run_tests
 *.gcno
 gcov_report.info
 gcov_report/
+docs/html
 
 compile_commands.json
 *.sublime-*

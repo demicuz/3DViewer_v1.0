@@ -1,6 +1,10 @@
 #ifndef _3DVIEWER_H
 #define _3DVIEWER_H
 
+/*! @file 3DViewer.h
+ *  @brief Core structures and functions.
+ */
+
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include "cimgui/cimgui.h"
 
@@ -25,6 +29,7 @@
 
 // #define DEBUG_PRINT
 
+/// Object's data, like vertices and transformation matrices.
 typedef struct {
   t_bbox bbox;
   GLfloat *vertices;
@@ -46,6 +51,7 @@ typedef struct {
   bool view_was_updated;
 } t_object;
 
+/// App's state and various parameters.
 typedef struct {
   t_vec3 bg_col;
   t_vec3 line_col;
@@ -58,6 +64,7 @@ typedef struct {
   bool parse_error;
 } t_app;
 
+/// Parser's state.
 typedef struct {
   char *basename;
   char *cursor;
@@ -71,6 +78,14 @@ void draw_ui(void);
 void ui_cleanup(void);
 
 // quite_ok_parser
+/**
+ * @brief      Parse an `.obj` file, write vertices and edges to `obj`
+ *
+ * @param[in]  filepath  The filepath
+ * @param      obj       The object
+ *
+ * @return     Returns `true` if parsed successfully.
+ */
 bool parse_obj(const char *filepath, t_object *obj);
 
 #endif
