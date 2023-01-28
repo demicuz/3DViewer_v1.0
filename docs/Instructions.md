@@ -15,9 +15,12 @@
 - `make tests` to run tests
 - `make gcov_report` to create and open a test coverage report
 - `make html` to generate this documentation and save it in `docs/html`
+- `make dist` to generate a release archive
 - `make insall DESTDIR=~` to install the executable in `~/.local/bin`
 - `make uninsall DESTDIR=~` to delete the executable from `~/.local/bin`
 
 ### Usage
 
 Press `Load .obj file` button and choose an `.obj` file you want to view. Use the sliders to control the object's position, scale and rotation. If you want to set an exact value, `Ctrl + click` on a slider and enter it.
+
+The `models/` directory has some sample `.obj` files. You can find more at [free3d.com](https://free3d.com/3d-models/simple).
