@@ -32,6 +32,10 @@ ifeq ($(UNAME_S), Darwin) #APPLE
 
 	OUTPUTNAME = cimgui.dylib
 	CXXFLAGS += -I/usr/local/include -I./imgui/
+#	CXXFLAGS += -I/Users/$(USER)/.brew/Cellar/glfw/3.3.8/include -I./imgui/ #MacOS mmicheli
+#	CXXFLAGS += -I/Users/$(USER)/goinfre/homebrew/opt/glfw/include -I./imgui/ #MacOS mmicheli
+	CXXFLAGS += -I/Users/$(USER)/Documents/21school/homebrew/opt/glfw/include -I./imgui/#MacOS sber
+
 	CXXFLAGS += -Wall
 	LINKFLAGS = -dynamiclib
 	CFLAGS = $(CXXFLAGS)

@@ -7,16 +7,19 @@ On Linux, install GLFW and `gtk-devel` (for "open file" dialog window). On Mac, 
 
 __Debian__ (didn't test myself, but should work):
 ```shell
-sudo apt install libglfw3-dev libgtk-3-dev libcheck-dev
+>$ sudo apt install libglfw3-dev libgtk-3-dev
 ```
 __Fedora__:
 ```shell
-sudo dnf install glfw-devel gtk3-devel check-devel
+>$ sudo dnf install glfw-devel gtk3-devel
+```
+__MacOS__:
+```shell
+>$ mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
+>$ brew install glfw
 ```
 
 Then run `make`.
-
-`models/` has some sample `.obj` files. You can find more at [free3d.com](https://free3d.com/3d-models/simple).
 
 ### Roadmap
 - [X] Translate/Rotate/Scale as separate operations on the model
@@ -24,12 +27,6 @@ Then run `make`.
 - [ ] Use mouse to rotate the model (optional)
 - [X] UI
 	- Works. Sort of.
-- [X] `.obj` file parsing, loading, correct error handling
-	- [ ] Support for negative vertex indices (will require a second pass during parsing)
-- [X] Unit tests for model loading and affine transformations
-- [X] `make install`
-- [X] `make uninstall`
-- [ ] `make dvi`
-- [ ] `make dist`
-- [X] `make tests`
-- [X] `make gcov_report`
+- [ ] `.obj` file parsing, loading, correct error handling
+- [ ] Unit tests for model loading and affine transformations
+- [ ] Makefile rules: `install`, `uninstall`, `dvi`, `dist`, `tests`, `gcov_report`
