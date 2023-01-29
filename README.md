@@ -27,6 +27,6 @@ Then run `make`.
 - [ ] Use mouse to rotate the model (optional)
 - [X] UI
 	- Works. Sort of.
-- [ ] `.obj` file parsing, loading, correct error handling
-- [ ] Unit tests for model loading and affine transformations
-- [ ] Makefile rules: `install`, `uninstall`, `dvi`, `dist`, `tests`, `gcov_report`
+- [X] `.obj` file parsing, loading, correct error handling
+- [X] Unit tests for model loading and affine transformations
+- [X] Makefile rules: `install`, `uninstall`, `dvi`, `dist`, `tests`, `gcov_report`
