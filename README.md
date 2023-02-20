@@ -1,5 +1,7 @@
 # 3DViewer v1.0
-A project for School 21.
+A project for School 21. View `.obj` files as wireframes.
+
+![](docs/img/lego.png)
 
 ### Building
 Requires OpenGL 3.3+ and [GLFW](https://github.com/glfw/glfw) to run.
